@@ -1,0 +1,17 @@
+{
+  "name": "matterhorn-rc",
+  "scripts": {
+  },
+  "env": {
+  },
+  "formation": {
+  },
+  "addons": [
+
+  ],
+  "buildpacks": [
+    {
+      "url": "https://github.com/swrdfish/meteor-buildpack-horse.git"
+    }
+  ]
+}
