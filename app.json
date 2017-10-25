@@ -3,6 +3,30 @@
   "scripts": {
   },
   "env": {
+    "ROOT_URL": {
+      "required": "true"
+    },
+    "BUILDPACK_CLEAR_CACHE": {
+      "required": "true"
+    },
+    "BUILDPACK_PRELAUNCH_METEOR": {
+      "required": "true"
+    },
+    "MONGODB_URI": {
+      "required": "true"
+    },
+    "MONGOLAB_BRONZE_URI": {
+      "required": "true"
+    },
+    "MONGO_URL": {
+      "required": "true"
+    },
+    "PAPERTRAIL_API_TOKEN": {
+      "required": "true"
+    },
+    "PHANTOMJS_CDNURL": {
+      "required": "true"
+    }
   },
   "formation": {
   },
