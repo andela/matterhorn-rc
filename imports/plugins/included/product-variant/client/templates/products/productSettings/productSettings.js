@@ -77,6 +77,13 @@ Template.productSettings.helpers({
 });
 
 Template.productSettingsGridItem.helpers({
+  displayTitle: function () {
+    if (this._id) {
+      return ReactionProduct.getTitle(this._id);
+    }
+    return null;
+  },
+
   displayPrice: function () {
     if (this._id) {
       return ReactionProduct.getProductPriceRange(this._id).range;

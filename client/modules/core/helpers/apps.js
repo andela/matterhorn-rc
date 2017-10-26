@@ -194,3 +194,4 @@ export function Apps(optionHash) {
 Template.registerHelper("reactionApps", (optionHash) => {
   return Reaction.Apps(optionHash);
 });
+
