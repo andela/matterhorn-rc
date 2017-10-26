@@ -358,6 +358,7 @@
         "deleteProduct": "Delete Product",
         "restoreProduct": "Restore Product from Trash",
         "deleteSelectedProducts": "Delete selected products?",
+        "deleteThisProduct": "Delete selected product?",
         "archiveThisProduct": "Archive this product?",
         "archiveSelectedProducts": "Archive selected products?",
         "publish": "Publish",

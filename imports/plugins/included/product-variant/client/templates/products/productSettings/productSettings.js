@@ -84,6 +84,12 @@ Template.productSettingsGridItem.helpers({
     return null;
   },
 
+  displayTitle: function () {
+    if (this._id) {
+      return ReactionProduct.getTitle(this._id);
+    }
+    return null;
+  },
   media: function () {
     const media = Media.findOne({
       "metadata.productId": this._id,

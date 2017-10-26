@@ -3,7 +3,7 @@ import { EJSON } from "meteor/ejson";
 import { check } from "meteor/check";
 import { Meteor } from "meteor/meteor";
 import { Catalog } from "/lib/api";
-import { Media, Products, Revisions, Tags } from "/lib/collections";
+import { Media, Products, ProductSearch, Tags } from "/lib/collections";
 import { Logger, Reaction } from "/server/api";
 
 /**
@@ -599,7 +599,7 @@ Meteor.methods({
       delete newProduct.publishedAt;
       delete newProduct.positions;
       delete newProduct.handle;
-      newProduct.isVisible = false;
+      newProduct.isVisible = true;
       if (newProduct.title) {
         // todo test this
         newProduct.title = createTitle(newProduct.title, newProduct._id);
@@ -726,36 +726,18 @@ Meteor.methods({
       ids.push(doc._id);
     });
 
-    Products.remove({
+    Products.direct.remove({
       _id: {
         $in: ids
       }
-    });
-
-    const numRemoved = Revisions.find({
-      "documentId": {
-        $in: ids
-      },
-      "documentData.isDeleted": true
-    }).count();
-
-    if (numRemoved > 0) {
-      // we can get removes results only in async way
-      Media.update({
-        "metadata.productId": {
+    }, () => {
+      ProductSearch.direct.remove({
+        _id: {
           $in: ids
-        },
-        "metadata.variantId": {
-          $in: ids
-        }
-      }, {
-        $set: {
-          "metadata.isDeleted": true
         }
       });
-      return numRemoved;
-    }
-    throw new Meteor.Error(304, "Something went wrong, nothing was deleted");
+    });
+    return ids.length;
   },
 
   /**

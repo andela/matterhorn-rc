@@ -53,7 +53,7 @@
     <div class="panel-body">
       <div class="order-items">
         {{#each product in products}}
-          {{> productSettingsListItem product}}
+           {{> productSettingsListItem product}}
         {{/each}}
       </div>
       {{!-- Todo: if theres only one selected
@@ -127,7 +127,7 @@
 
     <div class="order-item-details">
       <a href="{{pathFor 'product' handle=handle}}" data-event-category="grid" data-event-action="product-click" data-event-label="grid product click" data-event-value="{{_id}}">
-        <div class="overlay-title">{{title}}</div>
+        <div class="overlay-title">{{displayTitle}}</div>
         <div class="currency-symbol">{{formatPrice displayPrice}}</div>
       </a>
     </div>
