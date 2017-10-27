@@ -24,6 +24,7 @@
           {{else}}
               <span data-i18n="order.processing">Processing</span>
           {{/if}}
+          {{ orderStatus }}
         </div>
       </div>
 
@@ -99,6 +100,11 @@
     <div class="panel-footer">
       {{> ordersListSummary order=.}}
     </div>
+    {{#if hasComment}}
+        <div class="panel-footer">
+         {{> ordersListComment comments=comments}}
+        </div>
+        {{/if}}
   </div>
 
 {{else}}
@@ -107,3 +113,14 @@
   </div>
 {{/each}}
 </template>
+
+<template name="ordersListComment">
+      <div>
+        <strong>Comments</strong>
+        {{#each comments}}
+          <div>
+            <p><b>{{dateFormat createdAt format="MMM D h:mm"}}</b> - {{body}}</p>
+          </div>
+        {{/each}}
+      </div>
+    </template>
