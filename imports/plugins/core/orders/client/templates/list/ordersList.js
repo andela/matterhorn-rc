@@ -8,17 +8,6 @@ import { i18next } from "/client/api";
  *
  */
 Template.dashboardOrdersList.helpers({
-  orderStatus() {
-    if (this.workflow.status === "coreOrderCompleted") {
-      return true;
-      if (this.workflow.status === "coreOrderWorkflow/completed") {
-        return i18next.t("order.completed");
-      } else if (this.workflow.status === "canceled") {
-        return "Canceled";
-      }
-      return i18next.t("order.processing");
-    }
-  },
   orders(data) {
     if (data.hash.data) {
       return data.hash.data;
@@ -30,6 +19,15 @@ Template.dashboardOrdersList.helpers({
       limit: 25
     });
   },
+  orderStatus() {
+    if (this.workflow.status === "coreOrderCompleted" || this.workflow.status === "coreOrderWorkflow/completed") {
+      return "Completed";
+    }  else if (this.workflow.status === "canceled") {
+      return "Canceled";
+    }
+    return "Processing";
+  },
+
   orderAge() {
     return moment(this.createdAt).fromNow();
   },
