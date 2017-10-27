@@ -26,8 +26,8 @@ Template.coreOrderCancelOrder.onCreated(function () {
   template.formMessages = new ReactiveVar({});
 
   this.autorun(() => {
-    const currentData = Template.currentData();
-    const order = Template.currentData.order;
+    const currentData = template.data;
+    const order = currentData.order;
     if (order.workflow.status === "canceled") {
       template.showCancelOrderForm = ReactiveVar(false);
     }
