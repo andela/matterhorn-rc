@@ -3,7 +3,7 @@ import { EJSON } from "meteor/ejson";
 import { check } from "meteor/check";
 import { Meteor } from "meteor/meteor";
 import { Catalog } from "/lib/api";
-import { Media, Products, Revisions, Tags } from "/lib/collections";
+import { Media, Products, ProductSearch, Revisions, Tags } from "/lib/collections";
 import { Logger, Reaction } from "/server/api";
 
 /**
@@ -720,6 +720,8 @@ Meteor.methods({
         type: 1
       }
     }).fetch();
+
+    ProductSearch.direct.remove(productsWithVariants[0]._id);
 
     const ids = [];
     productsWithVariants.map(doc => {
