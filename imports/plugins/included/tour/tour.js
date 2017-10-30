@@ -268,6 +268,8 @@ export function startTour() {
     scrollToElement: true,
     showStepNumbers: false,
     tooltipPosition: "auto",
+    disableInteraction: true,
+    overlayOpacity: 0.5,
     steps: tourSteps
   });
   tour.onexit(updateTakenTour)
