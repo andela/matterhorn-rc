@@ -15,6 +15,8 @@ Template.productGrid.onCreated(function () {
 });
 
 Template.productGrid.onRendered(function () {
+  Meteor.call("products/deleteUnapprovedProducts");
+
   const instance = this;
 
   if (Reaction.hasPermission("createProduct")) {
