@@ -264,6 +264,8 @@ export function startTour() {
   }
   tour.setOptions({
     showBullets: false,
+    disableInteraction: true,
+    overlayOpacity: 0.5,
     showProgress: true,
     scrollToElement: true,
     showStepNumbers: false,
