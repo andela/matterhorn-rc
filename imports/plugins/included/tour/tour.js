@@ -9,7 +9,8 @@ const unregisteredBuyerTour = [
     intro: `<h2>Welcome to <strong>Reaction</strong> Commerce</h2>
     <hr>
     <div class="tourcontainer">
-      <strong>Reaction</strong> commerce is the last commerce platform you'll ever need. It's modern with all types of products and services. This brief tour would guide you to understand our platform.
+      <strong>Reaction</strong> commerce is the last commerce platform you'll ever need. 
+      It's modern with all types of products and services. This brief tour would guide you to understand our platform.
     </div>`
   },
   {
@@ -24,7 +25,8 @@ const unregisteredBuyerTour = [
     element: ".search",
     intro: `<h2>Search</h2>
     <hr>
-    <div class="tourcontainer">We are large with varieties of products. Our search system will help you expedite that product you are looking for. Find one here!
+    <div class="tourcontainer">We are large with varieties of products.
+    Our search system will help you expedite that product you are looking for. Find one here!
     </div>`
   },
   {
@@ -76,7 +78,8 @@ const registeredBuyerTour = [
     intro: `<h2>Welcome to <strong>Reaction</strong> Commerce</h2>
     <hr>
     <div class="tourcontainer">
-      <strong>Reaction</strong> commerce is the last commerce platform you'll ever need. It's modern with all types of products and services. This brief tour would guide you to understand our platform.
+      <strong>Reaction</strong> commerce is the last commerce platform you'll ever need.
+      It's modern with all types of products and services. This brief tour would guide you to understand our platform.
     </div>`
   },
   {
@@ -91,7 +94,8 @@ const registeredBuyerTour = [
     element: ".search",
     intro: `<h2>Search</h2>
     <hr>
-    <div class="tourcontainer">We are large with varieties of products. Our search system will help you expedite that product you are looking for. Find one here!
+    <div class="tourcontainer">We are large with varieties of products.
+     Our search system will help you expedite that product you are looking for. Find one here!
     </div>`
   },
   {
@@ -143,7 +147,8 @@ const adminTourSteps = [
     intro: `<h2>Welcome to <strong>Reaction</strong> Commerce</h2>
     <hr>
     <div class="tourcontainer">
-    <strong>Reaction</strong> commerce is the last commerce platform you'll ever need. It's modern with all types of products and services. This brief tour would guide you to understand our platform.
+    <strong>Reaction</strong> commerce is the last commerce platform you'll ever need. 
+    It's modern with all types of products and services. This brief tour would guide you to understand our platform.
     </div>`
   },
   {
@@ -160,7 +165,8 @@ const adminTourSteps = [
     element: ".search",
     intro: `<h2>Search</h2>
     <hr>
-    <div class="tourcontainer">We are large with varieties of products. Our search system will help you expedite that product you are looking for. Find one here!
+    <div class="tourcontainer">We are large with varieties of products. 
+    Our search system will help you expedite that product you are looking for. Find one here!
     </div>`
   },
   {
