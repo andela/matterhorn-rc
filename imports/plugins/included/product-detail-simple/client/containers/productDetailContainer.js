@@ -133,6 +133,7 @@ class ProductDetailContainer extends Component {
   }
 
   handleProductFieldChange = (productId, fieldName, value) => {
+    console.log(productId, fieldName, value);
     Meteor.call("products/updateProductField", productId, fieldName, value);
   }
 

@@ -9,6 +9,14 @@
         <span data-i18n="order.on">on</span>
         <span>{{dateFormat createdAt format="MMM D h:mm"}}</span>
       </h3>
+      <div class="col-xs-9">
+        {{#if isDigital}}
+        <a href="{{getProductUrl}}" download="{{getProductUrl}}" 
+        style="float: right;" 
+        class="btn btn-success">Download Product</a>
+        {{/if}}
+    </div>
+    
     </div>
     <div class="panel-body">
 
