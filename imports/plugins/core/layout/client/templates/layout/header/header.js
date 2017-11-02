@@ -35,10 +35,10 @@ Template.layoutHeader.helpers({
     const tags = Tags.find({
       isTopLevel: true
     }, {
-      sort: {
-        position: 1
-      }
-    }).fetch();
+        sort: {
+          position: 1
+        }
+      }).fetch();
 
     return {
       name: "coreHeaderNavigation",

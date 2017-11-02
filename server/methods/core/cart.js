@@ -360,11 +360,10 @@ Meteor.methods({
 
         Logger.info(`cart: increment variant ${variantId} quantity by ${
           quantity}`);
-
+ 
         return result;
       });
     }
-
     // cart variant doesn't exist
     return Collections.Cart.update({
       _id: cart._id
@@ -377,7 +376,9 @@ Meteor.methods({
           quantity: quantity,
           variants: variant,
           title: product.title,
-          type: product.type
+          type: product.type,
+          productUrl: product.productUrl,
+          isDigital: product.isDigital
         }
       }
     }, function (error, result) {

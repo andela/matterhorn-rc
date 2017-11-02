@@ -300,6 +300,54 @@ function flushQuantity(id) {
 }
 
 Meteor.methods({
+
+  /**
+   * products/deleteUnapprovedProducts
+   * @summary deletes all products without a title, description and vendor.
+   * @param {Object} [product] - optional product object
+   * @return {String} no return value
+   */
+  "products/deleteUnapprovedProducts": function () {
+    // must have createProduct permission
+    if (!Reaction.hasPermission("createProduct")) {
+      return false;
+    }
+
+    const emptyProducts = Products.find({
+      $and: [
+        {
+          ancestors: { $size: 0 }
+        },
+        {
+          $or: [
+            {
+              title: ""
+            },
+            {
+              description: ""
+            },
+            {
+              vendor: ""
+            }
+          ]
+        }
+      ]
+    }, { fields: { _id: 1 } }).fetch();
+
+    const emptyProductsId = emptyProducts.map(productInfo => productInfo._id);
+
+    Products.direct.remove({
+      $or: [
+        {
+          _id: { $in: emptyProductsId}
+        },
+        {
+          ancestors: { $elemMatch: { $in: emptyProductsId } }
+        }
+      ]
+    });
+  },
+
   /**
    * products/cloneVariant
    * @summary clones a product variant into a new variant
