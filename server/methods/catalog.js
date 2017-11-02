@@ -3,7 +3,7 @@ import { EJSON } from "meteor/ejson";
 import { check } from "meteor/check";
 import { Meteor } from "meteor/meteor";
 import { Catalog } from "/lib/api";
-import { Media, Products, Revisions, Tags } from "/lib/collections";
+import { Media, Products, ProductSearch, Revisions, Tags } from "/lib/collections";
 import { Logger, Reaction } from "/server/api";
 
 /**
@@ -300,6 +300,54 @@ function flushQuantity(id) {
 }
 
 Meteor.methods({
+
+  /**
+   * products/deleteUnapprovedProducts
+   * @summary deletes all products without a title, description and vendor.
+   * @param {Object} [product] - optional product object
+   * @return {String} no return value
+   */
+  "products/deleteUnapprovedProducts": function () {
+    // must have createProduct permission
+    if (!Reaction.hasPermission("createProduct")) {
+      return false;
+    }
+
+    const emptyProducts = Products.find({
+      $and: [
+        {
+          ancestors: { $size: 0 }
+        },
+        {
+          $or: [
+            {
+              title: ""
+            },
+            {
+              description: ""
+            },
+            {
+              vendor: ""
+            }
+          ]
+        }
+      ]
+    }, { fields: { _id: 1 } }).fetch();
+
+    const emptyProductsId = emptyProducts.map(productInfo => productInfo._id);
+
+    Products.direct.remove({
+      $or: [
+        {
+          _id: { $in: emptyProductsId}
+        },
+        {
+          ancestors: { $elemMatch: { $in: emptyProductsId } }
+        }
+      ]
+    });
+  },
+
   /**
    * products/cloneVariant
    * @summary clones a product variant into a new variant
@@ -720,6 +768,8 @@ Meteor.methods({
         type: 1
       }
     }).fetch();
+
+    ProductSearch.direct.remove(productsWithVariants[0]._id);
 
     const ids = [];
     productsWithVariants.map(doc => {

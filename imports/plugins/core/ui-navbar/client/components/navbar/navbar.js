@@ -1,7 +1,7 @@
 import { FlatButton } from "/imports/plugins/core/ui/client/components";
 import { Reaction } from "/client/api";
 import { Tags } from "/lib/collections";
-
+import { startTour } from "/imports/plugins/included/tour/tour";
 Template.CoreNavigationBar.onCreated(function () {
   this.state = new ReactiveDict();
 });
@@ -27,6 +27,16 @@ Template.CoreNavigationBar.events({
 });
 
 Template.CoreNavigationBar.helpers({
+  StartTourButtonComponent() {
+    return {
+      component: FlatButton,
+      kind: "flat",
+      label: "Start a tour",
+      onClick() {
+        startTour();
+      }
+    };
+  },
   IconButtonComponent() {
     return {
       component: FlatButton,
