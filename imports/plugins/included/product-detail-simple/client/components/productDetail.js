@@ -27,6 +27,7 @@ class ProductDetail extends Component {
       productUrl: " ",
       progress: 0,
       isUploading: false,
+      errorMessage: {},
       isAnalogue: true
     };
     this.handleUploadSuccess = this
@@ -69,6 +70,21 @@ class ProductDetail extends Component {
     return this.props.editable;
   }
 
+  handleProductError = (error) => {
+    if (error) {
+      const errorField = error.reason.split(" ")[1].toLowerCase();
+      this.setState({
+        errorMessage: {
+          [errorField]: `${error.reason}`
+        }
+      });
+    } else {
+      this.setState({
+        errorMessage: {}
+      });
+    }
+  }
+
   handleVisibilityChange = (event, isProductVisible) => {
     if (this.props.onProductFieldChange) {
       this
@@ -90,10 +106,7 @@ class ProductDetail extends Component {
       return (
         <Toolbar>
           <ToolbarGroup firstChild={true}>
-            <Translation
-              defaultValue="Product Management"
-              i18nKey="productDetail.productManagement"
-            />
+            <Translation defaultValue="Product Management" i18nKey="productDetail.productManagement" />
           </ToolbarGroup>
           <ToolbarGroup>
             <DropDownMenu
@@ -111,6 +124,7 @@ class ProductDetail extends Component {
               documents={[this.product]}
               onVisibilityChange={this.handleVisibilityChange}
               onAction={this.handlePublishActions}
+              handleProductError={this.handleProductError}
             />
           </ToolbarGroup>
         </Toolbar>
@@ -145,7 +159,8 @@ class ProductDetail extends Component {
             product={this.product}
             textFieldProps={{
               i18nKeyPlaceholder: "productDetailEdit.title",
-              placeholder: "Title"
+              placeholder: "Title",
+              helpText: this.state.errorMessage.title
             }}
           />
 
@@ -184,8 +199,37 @@ class ProductDetail extends Component {
                   </span>
                 </span>
               </div>
-              <div className="right">
-                {this.props.socialComponent}
+
+
+              <div className="vendor">
+                <ProductField
+                  editable={this.editable}
+                  fieldName="vendor"
+                  fieldTitle="Vendor"
+                  onProductFieldChange={this.props.onProductFieldChange}
+                  product={this.product}
+                  textFieldProps={{
+                    i18nKeyPlaceholder: "productDetailEdit.vendor",
+                    placeholder: "Vendor",
+                    helpText: this.state.errorMessage.vendor
+                  }}
+                />
+              </div>
+
+              <div className="pdp product-info">
+                <ProductField
+                  editable={this.editable}
+                  fieldName="description"
+                  fieldTitle="Description"
+                  multiline={true}
+                  onProductFieldChange={this.props.onProductFieldChange}
+                  product={this.product}
+                  textFieldProps={{
+                    i18nKeyPlaceholder: "productDetailEdit.description",
+                    placeholder: "Description",
+                    helpText: this.state.errorMessage.description
+                  }}
+                />
               </div>
             </div>
 
