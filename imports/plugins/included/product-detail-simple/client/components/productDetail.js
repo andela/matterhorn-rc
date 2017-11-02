@@ -200,6 +200,37 @@ class ProductDetail extends Component {
                 </span>
               </div>
 
+
+              <div className="vendor">
+                <ProductField
+                  editable={this.editable}
+                  fieldName="vendor"
+                  fieldTitle="Vendor"
+                  onProductFieldChange={this.props.onProductFieldChange}
+                  product={this.product}
+                  textFieldProps={{
+                    i18nKeyPlaceholder: "productDetailEdit.vendor",
+                    placeholder: "Vendor",
+                    helpText: this.state.errorMessage.vendor
+                  }}
+                />
+              </div>
+
+              <div className="pdp product-info">
+                <ProductField
+                  editable={this.editable}
+                  fieldName="description"
+                  fieldTitle="Description"
+                  multiline={true}
+                  onProductFieldChange={this.props.onProductFieldChange}
+                  product={this.product}
+                  textFieldProps={{
+                    i18nKeyPlaceholder: "productDetailEdit.description",
+                    placeholder: "Description",
+                    helpText: this.state.errorMessage.description
+                  }}
+                />
+              </div>
             </div>
 
             <div className="vendor">
