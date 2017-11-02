@@ -96,3 +96,6 @@ practicalmeteor:sinon
 
 # Custom Packages
 simple:rest
+richsilv:pikaday
+mrt:moment
+chart:chart
