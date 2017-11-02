@@ -1,13 +1,39 @@
 import moment from "moment";
 import { Template } from "meteor/templating";
-import { Orders, Shops } from "/lib/collections";
+import { Orders, Shops, Products } from "/lib/collections";
+
 import { i18next } from "/client/api";
+
 
 /**
  * dashboardOrdersList helpers
  *
  */
 Template.dashboardOrdersList.helpers({
+  orderStatus() {
+    if (this.workflow.status === "coreOrderCompleted") {
+      return true;
+    }
+  },
+  getProductUrl() {
+    const productId = this.items[0].productId;
+    const getProductData = Meteor.subscribe("Product", productId);
+    if (getProductData.ready()) {
+      const product = Products.findOne(productId);
+      return product.productUrl;
+    }
+    return null;
+  },
+  isDigital() {
+    const productId = this.items[0].productId;
+    const getProductData = Meteor.subscribe("Product", productId);
+    if (getProductData.ready()) {
+      const product = Products.findOne(productId);
+      return product.isDigital;
+    }
+    return null;
+  },
+
   orders(data) {
     if (data.hash.data) {
       return data.hash.data;
