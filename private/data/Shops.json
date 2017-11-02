@@ -212,6 +212,10 @@
       "format": "%s%v",
       "symbol": "kr"
     },
+    "NGN": {
+      "format": "%s%v",
+      "symbol": "₦"
+    },
     "USD": {
       "format": "%s%v",
       "symbol": "$"
@@ -390,7 +394,7 @@
       "scale": 0
     }
   },
-  "currency": "USD",
+  "currency": "NGN",
   "languages": [{
     "label": "العربية",
     "i18n": "ar",
