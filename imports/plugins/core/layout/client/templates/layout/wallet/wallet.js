@@ -7,7 +7,7 @@ import { Accounts, Packages, Wallets } from "/lib/collections";
 let list = [];
 let pageList = [];
 let currentPage = 1;
-const numberPerPage = 10;
+const numberPerPage = 7;
 let numberOfPages = 0;
 
 Template.wallet.onCreated(function bodyOnCreated() {
@@ -61,8 +61,8 @@ function check() {
 
 function loadList() {
   list = Template.instance().state.get("transactionsList");
-  const begin = (currentPage - 1) * numberPerPage;
-  const end = begin - numberPerPage;
+  const begin = numberPerPage * (currentPage - 1);
+  const end =  begin + numberPerPage;
   if (list[0] !== undefined) {
     pageList = list.slice(begin, end);
     Template.instance().state.set("transactions", pageList);
