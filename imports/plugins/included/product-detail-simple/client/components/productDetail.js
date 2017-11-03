@@ -131,7 +131,8 @@ class ProductDetail extends Component {
               product={this.product}
               textFieldProps={{
                 i18nKeyPlaceholder: "productDetailEdit.pageTitle",
-                placeholder: "Subtitle"
+                placeholder: "Subtitle",
+                helpText: this.state.errorMessage.subtitle
               }}
             />
           </header>
