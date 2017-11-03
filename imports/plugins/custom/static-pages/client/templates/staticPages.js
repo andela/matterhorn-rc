@@ -78,7 +78,7 @@ Template.staticPagesPanel.events({
 Template.staticPagesForm.events({
   "change #sp-name": function () {
     let slug = $("#sp-name").val().trim();
-    slug = slug.replace(/\s+/g, "-").toLowerCase();
+    slug = slug.replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").toLowerCase();
     $("#sp-url").val(slug);
   },
   "submit form": (event) => {
