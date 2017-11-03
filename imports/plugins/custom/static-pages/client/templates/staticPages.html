@@ -14,7 +14,7 @@
 </template>
 
 <template name="staticPagesPanel">
-  <div class="static-page-panel panel panel-info">
+  <div class="static-page-panel panel panel-primary">
       <div class="panel-heading">
         <h3 class="panel-title">Panel title</h3>
       </div>
@@ -58,21 +58,22 @@
 <template name="staticPagesForm">
   <form class="static-page">
     <div class='form-group'>
-        <h4 class="label-info">Page Title</h4>
-        <input type="text" name="name" id="sp-name" placeholder="Enter page name.. (e.g. Contact)" class="form-control" required="required">
+        <h4 class="label-default">Page Title</h4>
+        <input type="text" name="name" id="sp-name" placeholder="Enter page name.. (e.g. Contact)" class="form-control" >
     </div>
     <div class='form-group'>
-        <h4 class="label-info">Page URL Address</h4>
-        <input type="text" name="url" id="sp-url" placeholder="Enter page address.. (e.g. '/contact')" class="form-control" required="required">
+        <h4 class="label-default">Page URL Address</h4>
+        <input type="text" name="url" id="sp-url" placeholder="Enter page address.. (e.g. '/contact')" class="form-control">
         <input class="edit-page-data" type='hidden'>
     </div>
     <div class='form-group'>
-        <h4 class="label-info">Craft your page here below</h4>
+        <h4 class="label-default">Craft your page here below</h4>
         <textarea name="content" id="sp-content" class="form-control spform"></textarea>
     </div>
     <div class='form-group'>
-        <h4 class="label-info">Show page on navbar?</h4>
-        <input type="checkbox" name="showOnNavbar" id="sp-show" class="form-control" />
+        <h4 class="label-default">Show page on navbar?
+          &nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" name="showOnNavbar" id="sp-show" />
+        </h4>
     </div>
     <div class='form-group'>
       <button type="submit" class="save-static-page btn btn-default">Create Page</button>

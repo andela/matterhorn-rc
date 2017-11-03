@@ -76,18 +76,25 @@ Template.staticPagesPanel.events({
 });
 
 Template.staticPagesForm.events({
+  "change #sp-name": function () {
+    let slug = $("#sp-name").val().trim();
+    slug = slug.replace(/\s+/g, "-").toLowerCase();
+    $("#sp-url").val(slug);
+  },
   "submit form": (event) => {
     event.preventDefault();
     const field = event.target;
-    const pageName = field.name.value;
-    const pageAddress = field.url.value;
-    const pageContent = field.content.value;
-    const isEnabled = field.showOnNavbar.value === "on" ? true : false;
+    const pageName = field.name.value.trim();
+    const pageAddress = field.url.value.trim();
+    const pageContent = field.content.value.trim();
+    const isEnabled = document.getElementById("sp-show").checked;
     const userId = Meteor.userId();
     const shopId =  Reaction.getShopId();
     let createdAt = new Date();
     const updatedAt = new Date();
-
+    if (!pageName || !pageAddress || !pageContent) {
+      return Alerts.toast("All fields are required", "error");
+    }
     if ($(".static-page").find(".edit-page-data").attr("id") === undefined) {
       Meteor.call("insertPage", pageName, pageAddress, pageContent, userId,
       shopId, isEnabled, createdAt, function (err) {
