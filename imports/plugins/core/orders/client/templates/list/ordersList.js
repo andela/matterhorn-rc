@@ -1,17 +1,13 @@
 import moment from "moment";
 import { Template } from "meteor/templating";
 import { Orders, Shops } from "/lib/collections";
+import { i18next } from "/client/api";
 
 /**
  * dashboardOrdersList helpers
  *
  */
 Template.dashboardOrdersList.helpers({
-  orderStatus() {
-    if (this.workflow.status === "coreOrderCompleted") {
-      return true;
-    }
-  },
   orders(data) {
     if (data.hash.data) {
       return data.hash.data;
@@ -23,6 +19,15 @@ Template.dashboardOrdersList.helpers({
       limit: 25
     });
   },
+  orderStatus() {
+    if (this.workflow.status === "coreOrderCompleted" || this.workflow.status === "coreOrderWorkflow/completed") {
+      return "Completed";
+    }  else if (this.workflow.status === "canceled") {
+      return "Canceled";
+    }
+    return "Processing";
+  },
+
   orderAge() {
     return moment(this.createdAt).fromNow();
   },
@@ -32,5 +37,8 @@ Template.dashboardOrdersList.helpers({
   shopName() {
     const shop = Shops.findOne(this.shopId);
     return shop !== null ? shop.name : void 0;
+  },
+  hasComment() {
+    return this.comments.length > 0;
   }
 });
