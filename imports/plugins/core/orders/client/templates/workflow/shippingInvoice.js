@@ -131,6 +131,7 @@ Template.coreOrderShippingInvoice.events({
     } else {
       adjustedTotal = accounting.toFixed(orderTotal - refundTotal, 2);
     }
+    console.log(orderTotal, refunds, refundTotal, adjustedTotal);
 
     if (refund > adjustedTotal) {
       Alerts.inline("Refund(s) total cannot be greater than adjusted total", "error", {
@@ -285,14 +286,12 @@ Template.coreOrderShippingInvoice.helpers({
   paymentApproved() {
     const instance = Template.instance();
     const order = instance.state.get("order");
-
     return order.billing[0].paymentMethod.status === "approved";
   },
 
   paymentCaptured() {
     const instance = Template.instance();
     const order = instance.state.get("order");
-
     return order.billing[0].paymentMethod.status === "completed";
   },
 
