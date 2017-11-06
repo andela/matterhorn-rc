@@ -10,12 +10,17 @@ const orderFilters = [{
 }, {
   name: "processing",
   label: "Processing"
-}, {
+},
+{
+  name: "canceled",
+  label: "Canceled"
+},
+{
   name: "completed",
   label: "Completed"
 }];
 
-const OrderHelper =  {
+const OrderHelper = {
   makeQuery(filter) {
     let query = {};
 
