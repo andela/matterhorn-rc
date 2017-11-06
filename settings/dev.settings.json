@@ -2,10 +2,15 @@
   "ROOT_URL": "",
   "MAIL_URL": "",
   "reaction": {
-    "REACTION_USER": "",
-    "REACTION_AUTH": "",
-    "REACTION_EMAIL": ""
+    "REACTION_USER": "emmy",
+    "REACTION_AUTH": "EMMANUEL123",
+    "REACTION_EMAIL": "Ogunbotemilola@yahoo.com"
   },
   "isDebug": "info",
-  "public": {}
+  "public": {},
+  "SMS": {
+       "APIKEY": "dc176e15",
+        "APISECRET": "a1bf7300054673a9",
+        "SENDER": "2348068429137"
+      }
 }
