@@ -18,11 +18,15 @@ class PublishContainer extends Component {
       });
 
       Meteor.call("revisions/publish", documentIds, (error, result) => {
+        if (error) {
+          this.props.handleProductError(error);
+        }
+
         if (result === true) {
           const message = i18next.t("revisions.changedPublished", {
             defaultValue: "Changes published successfully"
           });
-
+          this.props.handleProductError();
           Alerts.toast(message, "success");
         } else {
           const message = i18next.t("revisions.noChangesPublished", {
@@ -83,6 +87,7 @@ class PublishContainer extends Component {
 PublishContainer.propTypes = {
   documentIds: PropTypes.arrayOf(PropTypes.string),
   documents: PropTypes.arrayOf(PropTypes.object),
+  handleProductError: PropTypes.func,
   isEnabled: PropTypes.bool,
   onAction: PropTypes.func,
   onVisibilityChange: PropTypes.func,

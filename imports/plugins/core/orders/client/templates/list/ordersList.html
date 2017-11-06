@@ -9,6 +9,14 @@
         <span data-i18n="order.on">on</span>
         <span>{{dateFormat createdAt format="MMM D h:mm"}}</span>
       </h3>
+      <div class="col-xs-9">
+        {{#if isDigital}}
+        <a href="{{getProductUrl}}" download="{{getProductUrl}}" 
+        style="float: right;" 
+        class="btn btn-success">Download Product</a>
+        {{/if}}
+    </div>
+    
     </div>
     <div class="panel-body">
 
@@ -19,11 +27,7 @@
           </strong>
         </div>
         <div class="col-xs-6 col-sm-10">
-          {{#if orderStatus}}
-              <span data-i18n="order.completed">Completed</span>
-          {{else}}
-              <span data-i18n="order.processing">Processing</span>
-          {{/if}}
+          {{ orderStatus }}
         </div>
       </div>
 
@@ -99,6 +103,11 @@
     <div class="panel-footer">
       {{> ordersListSummary order=.}}
     </div>
+    {{#if hasComment}}
+        <div class="panel-footer">
+         {{> ordersListComment comments=comments}}
+        </div>
+        {{/if}}
   </div>
 
 {{else}}
@@ -107,3 +116,14 @@
   </div>
 {{/each}}
 </template>
+
+<template name="ordersListComment">
+      <div>
+        <strong>Comments</strong>
+        {{#each comments}}
+          <div>
+            <p><b>{{dateFormat createdAt format="MMM D h:mm"}}</b> - {{body}}</p>
+          </div>
+        {{/each}}
+      </div>
+    </template>
