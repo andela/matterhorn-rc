@@ -278,6 +278,7 @@ export function startTour() {
     tooltipPosition: "auto",
     disableInteraction: true,
     overlayOpacity: 0.5,
+    exitOnOverlayClick: true,
     steps: tourSteps
   });
   tour.onexit(updateTakenTour)

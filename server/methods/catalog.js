@@ -1,4 +1,4 @@
-import _ from  "lodash";
+import _ from "lodash";
 import { EJSON } from "meteor/ejson";
 import { check } from "meteor/check";
 import { Meteor } from "meteor/meteor";
@@ -68,7 +68,7 @@ function createTitle(newTitle, productId) {
       title = `${titleString}-${titleNumberSuffix + titleCount}`;
     } else {
       // first copy will be "...-copy", second: "...-copy-2"
-      title = `${titleString}-copy${ titleCount > 1 ? "-" + titleCount : ""}`;
+      title = `${titleString}-copy${titleCount > 1 ? "-" + titleCount : ""}`;
     }
   }
 
@@ -124,7 +124,7 @@ function createHandle(productHandle, productId) {
       handle = `${handleString}-${handleNumberSuffix + handleCount}`;
     } else {
       // first copy will be "...-copy", second: "...-copy-2"
-      handle = `${handleString}-copy${ handleCount > 1
+      handle = `${handleString}-copy${handleCount > 1
         ? '-' + handleCount : ''}`;
     }
   }
@@ -214,10 +214,10 @@ function denormalize(id, field) {
   Products.update(id, {
     $set: update
   }, {
-    selector: {
-      type: "simple"
-    }
-  });
+      selector: {
+        type: "simple"
+      }
+    });
 }
 
 /**
@@ -289,14 +289,14 @@ function flushQuantity(id) {
   return Products.update({
     _id: id
   }, {
-    $set: {
-      inventoryQuantity: 0
-    }
-  }, {
-    selector: {
-      type: "variant"
-    }
-  });
+      $set: {
+        inventoryQuantity: 0
+      }
+    }, {
+      selector: {
+        type: "variant"
+      }
+    });
 }
 
 Meteor.methods({
@@ -339,7 +339,7 @@ Meteor.methods({
     Products.direct.remove({
       $or: [
         {
-          _id: { $in: emptyProductsId}
+          _id: { $in: emptyProductsId }
         },
         {
           ancestors: { $elemMatch: { $in: emptyProductsId } }
@@ -423,19 +423,19 @@ Meteor.methods({
           if (type === "child") {
             Logger.info(
               `products/cloneVariant: created sub child clone: ${
-                clone._id} from ${variantId}`
+              clone._id} from ${variantId}`
             );
           } else {
             Logger.info(
               `products/cloneVariant: created clone: ${
-                clone._id} from ${variantId}`
+              clone._id} from ${variantId}`
             );
           }
         }
         if (error) {
           Logger.error(
             `products/cloneVariant: cloning of ${variantId} was failed: ${
-              error}`
+            error}`
           );
         }
       });
@@ -489,7 +489,7 @@ Meteor.methods({
         if (result) {
           Logger.info(
             `products/createVariant: created variant: ${
-              newVariantId} for ${parentId}`
+            newVariantId} for ${parentId}`
           );
         }
       }
@@ -523,24 +523,24 @@ Meteor.methods({
       return Products.update({
         _id: variant._id
       }, {
-        $set: newVariant // newVariant already contain `type` property, so we
+          $set: newVariant // newVariant already contain `type` property, so we
           // do not need to pass it explicitly
-      }, {
-        validate: false
-      }, (error, result) => {
-        if (result) {
-          const productId = currentVariant.ancestors[0];
-          // we need manually check is these fields were updated?
-          // we can't stop after successful denormalization, because we have a
-          // case when several fields could be changed in top-level variant
-          // before form will be submitted.
-          toDenormalize.forEach(field => {
-            if (currentVariant[field] !== variant[field]) {
-              denormalize(productId, field);
-            }
-          });
-        }
-      });
+        }, {
+          validate: false
+        }, (error, result) => {
+          if (result) {
+            const productId = currentVariant.ancestors[0];
+            // we need manually check is these fields were updated?
+            // we can't stop after successful denormalization, because we have a
+            // case when several fields could be changed in top-level variant
+            // before form will be submitted.
+            toDenormalize.forEach(field => {
+              if (currentVariant[field] !== variant[field]) {
+                denormalize(productId, field);
+              }
+            });
+          }
+        });
     }
   },
 
@@ -606,8 +606,8 @@ Meteor.methods({
       return pool.filter(function (pair) {
         return pair.oldId === this.id;
       }, {
-        id: id
-      });
+          id: id
+        });
     }
 
     function setId(ids) {
@@ -640,7 +640,7 @@ Meteor.methods({
 
       const newProduct = Object.assign({}, product, {
         _id: productNewId
-          // ancestors: product.ancestors.push(product._id)
+        // ancestors: product.ancestors.push(product._id)
       });
       delete newProduct.updatedAt;
       delete newProduct.createdAt;
@@ -719,18 +719,18 @@ Meteor.methods({
     return Products.insert({
       type: "simple" // needed for multi-schema
     }, {
-      validate: false
-    }, (error, result) => {
-      // additionally, we want to create a variant to a new product
-      if (result) {
-        Products.insert({
-          ancestors: [result],
-          price: 0.00,
-          title: "",
-          type: "variant" // needed for multi-schema
-        });
-      }
-    });
+        validate: false
+      }, (error, result) => {
+        // additionally, we want to create a variant to a new product
+        if (result) {
+          Products.insert({
+            ancestors: [result],
+            price: 0.00,
+            title: "",
+            type: "variant" // needed for multi-schema
+          });
+        }
+      });
   },
 
   /**
@@ -764,10 +764,10 @@ Meteor.methods({
         }
       }]
     }, {
-      fields: {
-        type: 1
-      }
-    }).fetch();
+        fields: {
+          type: 1
+        }
+      }).fetch();
 
     ProductSearch.direct.remove(productsWithVariants[0]._id);
 
@@ -799,10 +799,10 @@ Meteor.methods({
           $in: ids
         }
       }, {
-        $set: {
-          "metadata.isDeleted": true
-        }
-      });
+          $set: {
+            "metadata.isDeleted": true
+          }
+        });
       return numRemoved;
     }
     throw new Meteor.Error(304, "Something went wrong, nothing was deleted");
@@ -845,10 +845,10 @@ Meteor.methods({
     const result = Products.update(_id, {
       $set: update
     }, {
-      selector: {
-        type: type
-      }
-    });
+        selector: {
+          type: type
+        }
+      });
 
     if (typeof result === "number") {
       if (type === "variant" && ~toDenormalize.indexOf(field)) {
@@ -900,10 +900,10 @@ Meteor.methods({
           hashtags: existingTag._id
         }
       }, {
-        selector: {
-          type: "simple"
-        }
-      });
+          selector: {
+            type: "simple"
+          }
+        });
     } else if (tagId) {
       return Tags.update(tagId, {
         $set: newTag
@@ -922,10 +922,10 @@ Meteor.methods({
         hashtags: newTagId
       }
     }, {
-      selector: {
-        type: "simple"
-      }
-    });
+        selector: {
+          type: "simple"
+        }
+      });
   },
 
   /**
@@ -947,10 +947,10 @@ Meteor.methods({
         hashtags: tagId
       }
     }, {
-      selector: {
-        type: "simple"
-      }
-    });
+        selector: {
+          type: "simple"
+        }
+      });
   },
 
   /**
@@ -1061,12 +1061,12 @@ Meteor.methods({
       return Products.update({
         _id: productId
       }, {
-        $set: {
-          [positions]: positionData,
-          updatedAt: new Date(),
-          type: "simple" // for multi-schema
-        }
-      });
+          $set: {
+            [positions]: positionData,
+            updatedAt: new Date(),
+            type: "simple" // for multi-schema
+          }
+        });
     }
 
     function updatePosition() {
@@ -1078,14 +1078,14 @@ Meteor.methods({
       return Products.update({
         _id: productId
       }, {
-        $set: {
-          [position]: positionData.position,
-          [pinned]: positionData.pinned,
-          [weight]: positionData.weight,
-          [updatedAt]: new Date(),
-          type: "simple" // for multi-schema
-        }
-      });
+          $set: {
+            [position]: positionData.position,
+            [pinned]: positionData.pinned,
+            [weight]: positionData.weight,
+            [updatedAt]: new Date(),
+            type: "simple" // for multi-schema
+          }
+        });
     }
 
     if (product && product.positions && product.positions[tag]) {
@@ -1118,16 +1118,16 @@ Meteor.methods({
           index: index
         }
       }, {
-        selector: {
-          type: "variant"
-        }
-      }, (error, result) => {
-        if (result) {
-          Logger.info(
-            `Variant ${id} position was updated to index ${index}`
-          );
-        }
-      });
+          selector: {
+            type: "variant"
+          }
+        }, (error, result) => {
+          if (result) {
+            Logger.info(
+              `Variant ${id} position was updated to index ${index}`
+            );
+          }
+        });
     });
   },
 
@@ -1155,40 +1155,40 @@ Meteor.methods({
         _id: productId,
         metafields: meta
       }, {
-        $set: {
-          "metafields.$": updatedMeta
-        }
-      }, {
-        selector: {
-          type: "simple"
-        }
-      });
+          $set: {
+            "metafields.$": updatedMeta
+          }
+        }, {
+          selector: {
+            type: "simple"
+          }
+        });
     } else if (typeof meta === "number") {
       return Products.update({
         _id: productId
       }, {
-        $set: {
-          [`metafields.${meta}`]: updatedMeta
-        }
-      }, {
-        selector: {
-          type: "simple"
-        }
-      });
+          $set: {
+            [`metafields.${meta}`]: updatedMeta
+          }
+        }, {
+          selector: {
+            type: "simple"
+          }
+        });
     }
 
     // adds metadata
     return Products.update({
       _id: productId
     }, {
-      $addToSet: {
-        metafields: updatedMeta
-      }
-    }, {
-      selector: {
-        type: "simple"
-      }
-    });
+        $addToSet: {
+          metafields: updatedMeta
+        }
+      }, {
+        selector: {
+          type: "simple"
+        }
+      });
   },
 
   /**
@@ -1213,10 +1213,10 @@ Meteor.methods({
       _id: productId,
       type: type
     }, {
-      $pull: {
-        metafields: metafields
-      }
-    });
+        $pull: {
+          metafields: metafields
+        }
+      });
   },
 
   /**
@@ -1279,10 +1279,10 @@ Meteor.methods({
           isVisible: !product.isVisible
         }
       }, {
-        selector: {
-          type: "simple"
-        }
-      });
+          selector: {
+            type: "simple"
+          }
+        });
 
       // if collection updated we return new `isVisible` state
       return res === 1 && !product.isVisible;
@@ -1309,10 +1309,10 @@ Meteor.methods({
         isVisible: !product.isVisible
       }
     }, {
-      selector: {
-        type: product.type
-      }
-    });
+        selector: {
+          type: product.type
+        }
+      });
 
     // if collection updated we return new `isVisible` state
     return res === 1 && !product.isVisible;

@@ -135,6 +135,16 @@ export function ReactionLayout(options = {}) {
   return options;
 }
 
+// Static Pages View Route
+Router.route("/pages/:pageAddress", {
+  action(params) {
+    ReactionLayout({
+      template: "staticPageView",
+      pageAddress: params.pageAddress
+    });
+  }
+});
+
 // default not found route
 Router.notFound = {
   action() {
@@ -179,6 +189,12 @@ Router.initPackageRoutes = () => {
       name: "index",
       action() {
         ReactionLayout(Session.get("INDEX_OPTIONS") || {});
+      }
+    });
+    shop.route("/wallet", {
+      name: "wallet",
+      action() {
+        ReactionLayout({ template: "wallet"});
       }
     });
 
