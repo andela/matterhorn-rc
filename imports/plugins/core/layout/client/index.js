@@ -16,6 +16,8 @@ import "./templates/layout/loading/loading.html";
 import "./templates/layout/notFound/notFound.html";
 import "./templates/layout/notFound/notFound.js";
 import "./templates/layout/notice/unauthorized.html";
+import "./templates/layout/staticPage/staticPage.html";
+import "./templates/layout/staticPage/staticPage.js";
 import "./templates/layout/layout.html";
 import "./templates/layout/wallet/wallet.html";
 import "./templates/layout/wallet/wallet.js";
