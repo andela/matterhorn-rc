@@ -135,6 +135,16 @@ export function ReactionLayout(options = {}) {
   return options;
 }
 
+// Static Pages View Route
+Router.route("/pages/:pageAddress", {
+  action(params) {
+    ReactionLayout({
+      template: "staticPageView",
+      pageAddress: params.pageAddress
+    });
+  }
+});
+
 // default not found route
 Router.notFound = {
   action() {
