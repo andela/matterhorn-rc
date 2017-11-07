@@ -97,4 +97,6 @@ practicalmeteor:sinon
 # Custom Packages
 rexzh0u:introjs
 simple:rest
+pauldowman:dotenv
+teamon:tinymce
 email
