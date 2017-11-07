@@ -154,6 +154,7 @@ simple:rest@1.1.1
 spacebars@1.0.13
 spacebars-compiler@1.0.13
 srp@1.0.10
+teamon:tinymce@4.5.4
 templating@1.2.15
 templating-compiler@1.2.15
 templating-runtime@1.2.15

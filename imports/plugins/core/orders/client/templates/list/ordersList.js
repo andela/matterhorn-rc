@@ -1,6 +1,6 @@
 import moment from "moment";
 import { Template } from "meteor/templating";
-import { Orders, Shops, Products } from "/lib/collections";
+
 
 import { i18next } from "/client/api";
 
@@ -33,7 +33,6 @@ Template.dashboardOrdersList.helpers({
     }
     return null;
   },
-
   orders(data) {
     if (data.hash.data) {
       return data.hash.data;

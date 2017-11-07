@@ -187,6 +187,7 @@ class ProductDetail extends Component {
               <ProductMetadata editable={this.props.editable} product={this.product} />
             </div>
 
+
             <div className="pdp column right pdp-right-column">
 
               <div className="pricing">
@@ -251,7 +252,6 @@ class ProductDetail extends Component {
              storageRef = {firebase.storage().ref("products")}
            /></div>}
           </div>
-
               <div className="options-add-to-cart">
                 {this.props.topVariantComponent}
               </div>
