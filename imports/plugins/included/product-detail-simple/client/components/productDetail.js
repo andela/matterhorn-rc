@@ -19,7 +19,6 @@ import ProductUpload from "./digitalProduct";
 
 firebase.initializeApp(config);
 
-
 class ProductDetail extends Component {
   constructor(props) {
     super(props);
