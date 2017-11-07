@@ -1,0 +1,48 @@
+<template name="searchFilter">
+  <div class="hidden" id="search-filter">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-4">
+          <label class="transform">PRICE</label>
+          <div class="rui select">
+            <select id="price-filter">
+              <option value="all">All Prices</option>
+              <option value="0-1000">Below ₦1000</option>
+              <option value="1000-2000">₦1000 - ₦2000</option>
+              <option value="2000-3000">₦2000 - ₦3000</option>
+              <option value="3000-5000">₦3000 - ₦5000</option>
+              <option value="5000-10000">₦5000 - ₦10000</option>
+              <option value="10000-10000000000">Above ₦10000 </option>
+            </select>
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <label class="transform">VENDOR</label>
+          <div class="rui select">
+            <select id="vendor-filter">
+              <option value="all">All Vendors</option>
+              {{#each vendor in getVendors allProducts }}
+              <option value="{{vendor}}">{{vendor}}</option>
+              {{/each}}
+            </select>
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <label class="transform">SORT PRODUCTS</label>
+          <div class="rui select">
+            <select id="sort-products">
+              <option value="null">Sort products by</option>
+              <option value="low price">Price: Low to High</option>
+              <option value="high price">Price: High to Low</option>
+              <option value="newest product">Newest to Oldest</option>
+              <option value="oldest product">Oldest to Newest</option>
+            </select>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</template>
