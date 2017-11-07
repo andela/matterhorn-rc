@@ -172,7 +172,8 @@ class ProductDetail extends Component {
               product={this.product}
               textFieldProps={{
                 i18nKeyPlaceholder: "productDetailEdit.pageTitle",
-                placeholder: "Subtitle"
+                placeholder: "Subtitle",
+                helpText: this.state.errorMessage.subtitle
               }}
             />
           </header>
@@ -209,7 +210,8 @@ class ProductDetail extends Component {
                   product={this.product}
                   textFieldProps={{
                     i18nKeyPlaceholder: "productDetailEdit.vendor",
-                    placeholder: "Vendor"
+                    placeholder: "Vendor",
+                    helpText: this.state.errorMessage.vendor
                   }}
                 />
               </div>
@@ -234,7 +236,7 @@ class ProductDetail extends Component {
                   name="productType"
                   onChange={this.handleChange}
                 >
-                  <option>Analogue</option>
+                  <option>Non-Digital</option>
                   <option>Digital</option>
                 </select>
                 {!this.state.isAnalogue &&
