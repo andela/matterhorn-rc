@@ -228,7 +228,10 @@ class ProductDetail extends Component {
                   helpText: this.state.errorMessage.description
                 }}
               />
-              <label htmlFor="productType">Product Type</label>
+              {
+                this.props.hasAdminPermission &&
+                <div>
+                <label htmlFor="productType">Product Type</label>
               <select className="form-control"
                 id="productType"
                 name="productType"
@@ -237,6 +240,9 @@ class ProductDetail extends Component {
                 <option>Analogue</option>
                 <option>Digital</option>
               </select>
+              </div>
+              }
+              
            { !this.state.isAnalogue &&
             <div><p />
             <label>{this.state.progress < 100 && <p>Upload digital product</p>}</label>
