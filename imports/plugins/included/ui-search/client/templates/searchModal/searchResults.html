@@ -6,6 +6,8 @@
         {{> productResults productSearchResults=productSearchResults}}
       {{/if}}
 
+      {{> emptySearch searchQuery=searchQuery productSearchResults=productSearchResults}}
+
       {{#if orderSearchResults}}
         {{> orderResults orderSearchResults=orderSearchResults orderTable=orderTable}}
       {{/if}}

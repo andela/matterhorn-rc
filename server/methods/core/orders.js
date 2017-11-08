@@ -335,24 +335,23 @@ Meteor.methods({
       }
     }
 
-      // Sending sms notification to customer when order has been shipped/completed
+      // Sending sms notification
     const customerSmsContent = {
       to: shoppersPhone
     };
     const message = {
       "new": `Your order for ${orderedProducts} has been successfully received and is been processed. Thanks.`,
       "coreOrderWorkflow/processing": "Your order is on the way and will soon be delivered",
-      "coreOrderWorkflow/completed": "Your order has been shipped, Thanks.",
-      "coreorderWorkflow/canceled": "Your order was cancelled",
+      "coreOrderWorkflow/completed":
+      "Your order has been shipped, Thanks.",
       "success": "SMS SENT"
     };
     customerSmsContent.message = message[order.workflow.status];
     Logger.info("smsContent for Customer", customerSmsContent);
-    Meteor.call("send/smsAlert", customerSmsContent, (error, result) => {
+    Meteor.call("send/smsAlert", customerSmsContent, (error) => {
       if (error) {
         Logger.warn("ERROR", error);
       } else {
-        Logger.info(result);
         Logger.info("SMS SENT");
       }
     });
@@ -880,6 +879,34 @@ Meteor.methods({
     */
   "orders/cancelOrder"(order) {
     check(order, Object);
+    Logger.warn("Shopper canceled order", order)
+    const options = {
+      to: order.email,
+      from: "MATTERHORN-RC TEAM",
+      subject: "Canceled Order",
+      html: `<div>
+           <p>Hi ${order.shipping[0].address.fullName},</p>
+           <p>You canceled this order.</p>
+           <strong>
+            <p>Item: ${order.items[0].title}</p>
+            <p>Thanks for shopping with us!</p>
+            <b><p> MATTERHORN-RC </p></b>
+            </strong></div>`
+    };
+    Reaction.Email.send(options);
+    // SMS goes here
+    const shoppersPhone = `234${order.billing[0].address.phone.slice(1)}`;
+    const customerSmsContent = {
+      to: shoppersPhone,
+      message: "You canceled this order."
+    };
+    Meteor.call("send/smsAlert", customerSmsContent, (error) => {
+      if (error) {
+        Logger.warn("ERROR", error);
+      } else {
+        Logger.info("SMS SENT");
+      }
+    });
     return Orders.update(order._id, {
       $set: {
         "workflow.status": "canceled"
@@ -903,6 +930,34 @@ Meteor.methods({
     if (!Reaction.hasPermission("orders")) {
       throw new Meteor.Error(403, "Access Denied");
     }
+    const options = {
+      to: order.email,
+      from: "MATTERHORN-RC TEAM",
+      subject: "Canceled Order",
+      html: `<div>
+           <p>Hi ${order.shipping[0].address.fullName},</p>
+           <p>Your order has been canceled. Please find the details below</p>
+           <strong>
+            <p>Item: ${order.items[0].title}</p>
+          <p style="color:red">Reason: ${newComment.body}</p>
+            <p>Thanks for shopping with us!</p>
+            <b><p> MATTERHORN-RC </p></b>
+            </strong></div>`
+    };
+    Reaction.Email.send(options);
+    //SMS goes here
+    const shoppersPhone = `234${order.billing[0].address.phone.slice(1)}`;
+    const customerSmsContent = {
+      to: shoppersPhone,
+      message: "Your order has been canceled. Check your email for details."
+    };
+    Meteor.call("send/smsAlert", customerSmsContent, (error) => {
+      if (error) {
+        Logger.warn("ERROR", error);
+      } else {
+        Logger.info("SMS SENT");
+      }
+    });
       // TODO: Refund order
     return Orders.update(order._id, {
       $set: {

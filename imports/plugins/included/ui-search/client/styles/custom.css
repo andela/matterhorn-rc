@@ -1,0 +1,16 @@
+html:not(.rtl) .rui.search-modal-input .filter-search {
+  right: 80px;
+}
+
+.empty-search h3 {
+  font-size: 30px;
+  font-weight: normal;
+}
+
+#search-filter {
+  margin: 10px 0px;
+}
+
+.product-tag {
+  width: 96%;
+}

@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from "react";
 import firebase from "firebase";
-import config from "../config";
+
+import  "../config";
 
 import {
   Button,
@@ -17,9 +18,6 @@ import { PublishContainer } from "/imports/plugins/core/revisions";
 
 import ProductUpload from "./digitalProduct";
 
-firebase.initializeApp(config);
-
-
 class ProductDetail extends Component {
   constructor(props) {
     super(props);
@@ -28,7 +26,7 @@ class ProductDetail extends Component {
       progress: 0,
       isUploading: false,
       errorMessage: {},
-      isAnalogue: true
+      isnonDigital: true
     };
     this.handleUploadSuccess = this
       .handleUploadSuccess
@@ -55,7 +53,7 @@ class ProductDetail extends Component {
   handleChange(event) {
     const value = event.target.value;
 
-    value === "Analogue" ? this.setState({ isAnalogue: true }) : this.setState({ isAnalogue: false });
+    value === "nonDigital" ? this.setState({ isnonDigital: true }) : this.setState({ isnonDigital: false });
   }
 
   get tags() {
@@ -173,7 +171,8 @@ class ProductDetail extends Component {
               product={this.product}
               textFieldProps={{
                 i18nKeyPlaceholder: "productDetailEdit.pageTitle",
-                placeholder: "Subtitle"
+                placeholder: "Subtitle",
+                helpText: this.state.errorMessage.subtitle
               }}
             />
           </header>
@@ -188,6 +187,7 @@ class ProductDetail extends Component {
               />
               <ProductMetadata editable={this.props.editable} product={this.product} />
             </div>
+
 
             <div className="pdp column right pdp-right-column">
 
@@ -210,44 +210,50 @@ class ProductDetail extends Component {
                   product={this.product}
                   textFieldProps={{
                     i18nKeyPlaceholder: "productDetailEdit.vendor",
-                    placeholder: "Vendor"
+                    placeholder: "Vendor",
+                    helpText: this.state.errorMessage.vendor
                   }}
                 />
               </div>
 
-              <div className="pdp product-info">
-                <ProductField
-                  editable={this.editable}
-                  fieldName="description"
-                  fieldTitle="Description"
-                  multiline={true}
-                  onProductFieldChange={this.props.onProductFieldChange}
-                  product={this.product}
-                  textFieldProps={{
-                    i18nKeyPlaceholder: "productDetailEdit.description",
-                    placeholder: "Description",
-                    helpText: this.state.errorMessage.description
-                  }}
-                />
+            <div className="pdp product-info">
+              <ProductField
+                editable={this.editable}
+                fieldName="description"
+                fieldTitle="Description"
+                multiline={true}
+                onProductFieldChange={this.props.onProductFieldChange}
+                product={this.product}
+                textFieldProps={{
+                  i18nKeyPlaceholder: "productDetailEdit.description",
+                  placeholder: "Description",
+                  helpText: this.state.errorMessage.description
+                }}
+              />
+              {
+                this.props.hasAdminPermission &&
+                <div>
                 <label htmlFor="productType">Product Type</label>
-                <select className="form-control"
-                  id="productType"
-                  name="productType"
-                  onChange={this.handleChange}
-                >
-                  <option>Analogue</option>
-                  <option>Digital</option>
-                </select>
-                {!this.state.isAnalogue &&
-                  <div><p />
-                    <label>{this.state.progress < 100 && <p>Upload digital product</p>}</label>
-                    <label>{this.state.progress === 100 && <p>Upload successful</p>}</label>
-                    <ProductUpload
-                      handleUploadSuccess={this.handleUploadSuccess}
-                      storageRef={firebase.storage().ref("products")}
-                    /></div>}
+              <select className="form-control"
+                id="productType"
+                name="productType"
+                onChange={this.handleChange}
+              >
+                <option>Non Digital</option>
+                <option>Digital</option>
+              </select>
               </div>
+              }
 
+           { !this.state.isnonDigital &&
+            <div><p />
+            <label>{this.state.progress < 100 && <p>Upload digital product</p>}</label>
+            <label>{this.state.progress === 100 && <p>Upload successful</p>}</label>
+           <ProductUpload
+             handleUploadSuccess={this.handleUploadSuccess}
+             storageRef = {firebase.storage().ref("products")}
+           /></div>}
+          </div>
               <div className="options-add-to-cart">
                 {this.props.topVariantComponent}
               </div>
