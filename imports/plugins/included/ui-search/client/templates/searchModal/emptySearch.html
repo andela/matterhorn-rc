@@ -1,0 +1,23 @@
+<template name="emptySearch">
+  {{#if noResults searchQuery productSearchResults}}
+  <div class="empty-search container">
+      <h3>Sorry, no products match the search criteria.</h3>
+      <h4>Search Tips</h4>
+      <ul>
+        <li>
+          Check your spelling for typing errors, e.g. "Bakset" instead of "Basket".
+        </li>
+        <li>
+          Try searching with short and simple keywords. e.g. blue dress.
+        </li>
+        <li>
+          Try removing one or all of your filters for a more positive outcome.
+        </li>
+        <li>
+          Try searching more general terms - you can then filter the search results.
+        </li>
+      </ul>
+  </div>
+  {{/if}}
+  </template>
+  
