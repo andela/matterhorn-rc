@@ -171,7 +171,8 @@ class ProductDetail extends Component {
               product={this.product}
               textFieldProps={{
                 i18nKeyPlaceholder: "productDetailEdit.pageTitle",
-                placeholder: "Subtitle"
+                placeholder: "Subtitle",
+                helpText: this.state.errorMessage.subtitle
               }}
             />
           </header>
@@ -209,7 +210,8 @@ class ProductDetail extends Component {
                   product={this.product}
                   textFieldProps={{
                     i18nKeyPlaceholder: "productDetailEdit.vendor",
-                    placeholder: "Vendor"
+                    placeholder: "Vendor",
+                    helpText: this.state.errorMessage.vendor
                   }}
                 />
               </div>
@@ -242,7 +244,7 @@ class ProductDetail extends Component {
               </select>
               </div>
               }
-              
+
            { !this.state.isnonDigital &&
             <div><p />
             <label>{this.state.progress < 100 && <p>Upload digital product</p>}</label>
