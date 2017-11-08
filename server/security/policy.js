@@ -33,6 +33,10 @@ BrowserPolicy.content.allowOriginForAll("https://disqus.com");
 BrowserPolicy.content.allowOriginForAll("*.disqus.com");
 BrowserPolicy.content.allowOriginForAll("c.disquscdn.com");
 BrowserPolicy.content.allowOriginForAll("*.viglink.com");
+BrowserPolicy.content.allowOriginForAll("*.twitter.com");
+BrowserPolicy.content.allowOriginForAll("*.twimg.com");
+BrowserPolicy.content.allowOriginForAll("*.addthis.com");
+BrowserPolicy.content.allowOriginForAll("*.addthisedge.com");
 
 BrowserPolicy.content.allowImageOrigin("fbcdn-profile-a.akamaihd.net");
 BrowserPolicy.content.allowImageOrigin("secure.gravatar.com");
