@@ -8,14 +8,7 @@
   {{!-- Use old product detail page --}}
   {{> productDetail }}
   {{/if}}
-  <div class="container">
-    <div class='row'>
-      <div class='col-md-12 text-center'>
-        {{> lmSocialShare opts=opts}}
-      </div>
-    </div>
-  </div>
-  <div class='container'>
+  <div class='reviews-box container'>
     <div class='row'>
       <div class='col-md-6'>
           <div id="disqus_thread"></div>
@@ -28,9 +21,6 @@
               })();
           </script>
           <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
-      </div>
-      <div class='col-md-6'>
-        <a class="twitter-timeline" href="https://twitter.com/matterhorn_rc?ref_src=twsrc%5Etfw">Tweets by matterhorn_rc</a> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
       </div>
     </div>
   </div>
