@@ -4,7 +4,7 @@ import { expect } from "meteor/practicalmeteor:chai";
 import { sinon } from "meteor/practicalmeteor:sinon";
 
 before(function () {
-  this.timeout(10000);
+  this.timeout(40000);
   Meteor._sleepForMs(7000);
 });
 
