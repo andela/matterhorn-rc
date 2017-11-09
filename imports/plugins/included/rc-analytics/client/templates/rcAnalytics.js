@@ -94,7 +94,7 @@ function getDailySales(statement) {
     const data = analytics.dateString;
     let totalSale = 0;
     if (analytics.totalSales) {
-      totalSale = analytics.totalSales.replace("$", "");
+      totalSale = analytics.totalSales.replace("₦", "");
       totalSale = totalSale.replace(",", "");
       totalSale = parseFloat(totalSale);
     }

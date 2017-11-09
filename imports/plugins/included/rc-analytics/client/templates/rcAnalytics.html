@@ -1,7 +1,10 @@
 <template name="rcAnalytics">
-  <div class="container analytic">
-    <label labelFor="fromdatepicker" class="fromdatepicker">From: </label> <input type="text" id="fromdatepicker">
-    <label labelFor="todatepicker" class="todatepicker">To: </label> <input type="text" id="todatepicker">
+  <div class="container">
+  <div class="analytic">
+    <label labelFor="fromdatepicker" class="fromdatepicker">From: </label> 
+    <input type="text" id="fromdatepicker">
+    <label labelFor="todatepicker" class="todatepicker">To: </label> 
+    <input type="text" id="todatepicker">
   </div>
   <ul class="nav nav-tabs nav-justified">
     <li class="active"><a data-toggle="tab" href="#overview"><strong>Overview</strong></a></li>
@@ -33,6 +36,7 @@
       {{> charts }}
     </div>
   </div>
+</div>
 </template>
 
 <template name="overview">
