@@ -1,9 +1,10 @@
 import _ from "lodash";
 import React from "react";
+import { Session } from "meteor/session";
 import { DataType } from "react-taco-table";
 import { Template } from "meteor/templating";
 import { i18next } from "/client/api";
-import { ProductSearch, Tags, OrderSearch, AccountSearch } from "/lib/collections";
+import { ProductSearch, Tags, OrderSearch, AccountSearch, Products } from "/lib/collections";
 import { IconButton, SortableTable } from "/imports/plugins/core/ui/client/components";
 
 /*
@@ -27,7 +28,8 @@ Template.searchModal.onCreated(function () {
     canLoadMoreProducts: false,
     searchQuery: "",
     productSearchResults: [],
-    tagSearchResults: []
+    tagSearchResults: [],
+    allProducts: []
   });
 
 
@@ -43,19 +45,74 @@ Template.searchModal.onCreated(function () {
     }
   });
 
+  const filterProductsByVendor = (products, vendor) => {
+    return _.filter(products, (product) => {
+      return product.vendor === vendor;
+    });
+  };
+
+  const filterProductsByPrice = (products, priceRange) => {
+    return _.filter(products, (product) => {
+      if (product.price) {
+        const maxPrice = parseFloat(product.price.max);
+        const minPrice = parseFloat(product.price.min);
+        const queryMaxPrice = parseFloat(priceRange[1]);
+        const queryMinPrice = parseFloat(priceRange[0]);
+        if (minPrice >= queryMinPrice && maxPrice <= queryMaxPrice) {
+          return product;
+        }
+      }
+    });
+  };
+
+  const sortProducts = (products, sortQuery) => {
+    if (sortQuery === "low price") {
+      return _.orderBy(products, ["price.min"], ["asc"]);
+    }
+
+    if (sortQuery === "high price") {
+      return _.orderBy(products, ["price.min"], ["desc"]);
+    }
+
+    if (sortQuery === "newest product") {
+      return products;
+    }
+
+    if (sortQuery === "oldest product") {
+      return products.reverse();
+    }
+  };
+
 
   this.autorun(() => {
     const searchCollection = this.state.get("searchCollection") || "products";
     const searchQuery = this.state.get("searchQuery");
     const facets = this.state.get("facets") || [];
     const sub = this.subscribe("SearchResults", searchCollection, searchQuery, facets);
+    const vendorQuery = Session.get("vendorFilter");
+    const priceQuery = Session.get("priceFilter");
+    const sortQuery = Session.get("sortValue");
 
     if (sub.ready()) {
       /*
        * Product Search
        */
       if (searchCollection === "products") {
-        const productResults = ProductSearch.find().fetch();
+        let productResults = ProductSearch.find().fetch();
+
+        if (priceQuery && !["all"].includes(priceQuery)) {
+          const range = priceQuery.split("-");
+          productResults = filterProductsByPrice(productResults, range);
+        }
+
+        if (vendorQuery && !["all"].includes(vendorQuery)) {
+          productResults = filterProductsByVendor(productResults, vendorQuery);
+        }
+
+        if (sortQuery && !["null"].includes(sortQuery)) {
+          productResults = sortProducts(productResults, sortQuery);
+        }
+
         const productResultsCount = productResults.length;
         this.state.set("productSearchResults", productResults);
         this.state.set("productSearchCount", productResultsCount);
@@ -75,6 +132,9 @@ Template.searchModal.onCreated(function () {
         }).fetch();
         this.state.set("tagSearchResults", tagResults);
 
+        const allProducts = Products.find().fetch();
+        this.state.set("allProducts", allProducts);
+
         // TODO: Do we need this?
         this.state.set("accountSearchResults", "");
         this.state.set("orderSearchResults", "");
@@ -93,6 +153,7 @@ Template.searchModal.onCreated(function () {
         this.state.set("orderSearchResults", "");
         this.state.set("productSearchResults", "");
         this.state.set("tagSearchResults", "");
+        this.state.set("allProducts", "");
       }
 
       /*
@@ -109,6 +170,7 @@ Template.searchModal.onCreated(function () {
         this.state.set("accountSearchResults", "");
         this.state.set("productSearchResults", "");
         this.state.set("tagSearchResults", "");
+        this.state.set("allProducts", "");
       }
     }
   });
@@ -143,6 +205,16 @@ Template.searchModal.helpers({
   tagSearchResults() {
     const instance = Template.instance();
     const results = instance.state.get("tagSearchResults");
+    return results;
+  },
+  allProducts() {
+    const instance = Template.instance();
+    const results = instance.state.get("allProducts");
+    return results;
+  },
+  searchQuery() {
+    const instance = Template.instance();
+    const results = instance.state.get("searchQuery");
     return results;
   },
   showSearchResults() {
@@ -189,6 +261,10 @@ Template.searchModal.events({
     $("#search-input").focus();
     const searchQuery = templateInstance.find("#search-input").value;
     templateInstance.state.set("searchQuery", searchQuery);
+  },
+  "click [data-event-action=filterSearch]": function () {
+    $("#search-filter").toggleClass("hidden");
+    $("#toggleTags").toggleClass("hidden");
   },
   "click [data-event-action=searchCollection]": function (event, templateInstance) {
     event.preventDefault();

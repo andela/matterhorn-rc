@@ -9,6 +9,7 @@ import { getSlug } from "/lib/api";
 import { Cart, Media, Orders, Products, Shops } from "/lib/collections";
 import * as Schemas from "/lib/collections/schemas";
 import { Logger, Reaction } from "/server/api";
+import Nexmo from "nexmo";
 
 /**
  * Reaction Order Methods
@@ -80,10 +81,10 @@ Meteor.methods({
         "_id": order._id,
         "shipping._id": shipment._id
       }, {
-        $set: {
-          "shipping.$.packed": packed
-        }
-      });
+          $set: {
+            "shipping.$.packed": packed
+          }
+        });
 
       // Set the status of the items as shipped
       const itemIds = shipment.items.map((item) => {
@@ -96,10 +97,10 @@ Meteor.methods({
           "_id": order._id,
           "shipping._id": shipment._id
         }, {
-          $set: {
-            "shipping.$.packed": packed
-          }
-        });
+            $set: {
+              "shipping.$.packed": packed
+            }
+          });
       }
       return result;
     }
@@ -324,6 +325,36 @@ Meteor.methods({
    */
   "orders/sendNotification": function (order) {
     check(order, Object);
+    const orderedItems = order.items;
+    const shoppersPhone = `234${order.billing[0].address.phone.slice(1)}`;
+    let orderedProducts = "";
+
+    if (order.workflow.status === "new") {
+      for (let i = 0; i < orderedItems.length; i += 1) {
+        orderedProducts += `${orderedItems[i].title}`;
+      }
+    }
+
+      // Sending sms notification
+    const customerSmsContent = {
+      to: shoppersPhone
+    };
+    const message = {
+      "new": `Your order for ${orderedProducts} has been successfully received and is been processed. Thanks.`,
+      "coreOrderWorkflow/processing": "Your order is on the way and will soon be delivered",
+      "coreOrderWorkflow/completed":
+      "Your order has been shipped, Thanks.",
+      "success": "SMS SENT"
+    };
+    customerSmsContent.message = message[order.workflow.status];
+    Logger.info("smsContent for Customer", customerSmsContent);
+    Meteor.call("send/smsAlert", customerSmsContent, (error) => {
+      if (error) {
+        Logger.warn("ERROR", error);
+      } else {
+        Logger.info("SMS SENT");
+      }
+    });
 
     if (!this.userId) {
       Logger.error("orders/sendNotification: Access denied");
@@ -436,10 +467,37 @@ Meteor.methods({
       from: `${shop.name} <${shop.emails[0].address}>`,
       subject: "Your order is confirmed",
       // subject: `Order update from ${shop.name}`,
-      html: SSR.render(tpl,  dataForOrderEmail)
+      html: SSR.render(tpl, dataForOrderEmail)
     });
 
     return true;
+  },
+   /**
+   * send/smsAlert
+   *
+   * @summary send order notification sms
+   * @param {Object} smsContent - send notification action
+   * @return {Boolean} sms notification
+   */
+  "send/smsAlert": function (smsContent) {
+    check(smsContent, Object);
+    const apiKey = Meteor.settings.SMS.APIKEY;
+    const apiSecret = Meteor.settings.SMS.APISECRET;
+    const sender = Meteor.settings.SMS.SENDER;
+    const recipient = smsContent.to;
+    const message = smsContent.message;
+    const nexmo = new Nexmo({
+      apiKey,
+      apiSecret
+    });
+    nexmo.message.sendSms(sender, recipient, message, {}, (err, res) => {
+      if (err) {
+        return Logger.error(err);
+      }
+      Logger.info(res);
+      Logger.info(sender);
+      Logger.info(recipient);
+    });
   },
 
   /**
@@ -490,10 +548,10 @@ Meteor.methods({
       "_id": orderId,
       "shipping._id": shippingId
     }, {
-      $addToSet: {
-        "shipping.shipments": data
-      }
-    });
+        $addToSet: {
+          "shipping.shipments": data
+        }
+      });
   },
 
   /**
@@ -518,10 +576,10 @@ Meteor.methods({
       "_id": order._id,
       "shipping._id": shipment._id
     }, {
-      $set: {
-        ["shipping.$.tracking"]: tracking
-      }
-    });
+        $set: {
+          ["shipping.$.tracking"]: tracking
+        }
+      });
   },
 
   /**
@@ -546,10 +604,10 @@ Meteor.methods({
       "_id": orderId,
       "shipping._id": shipmentId
     }, {
-      $push: {
-        "shipping.$.items": item
-      }
-    });
+        $push: {
+          "shipping.$.items": item
+        }
+      });
   },
 
   "orders/updateShipmentItem": function (orderId, shipmentId, item) {
@@ -565,10 +623,10 @@ Meteor.methods({
       "_id": orderId,
       "shipments._id": shipmentId
     }, {
-      $addToSet: {
-        "shipment.$.items": shipmentIndex
-      }
-    });
+        $addToSet: {
+          "shipment.$.items": shipmentIndex
+        }
+      });
   },
 
   /**
@@ -619,7 +677,7 @@ Meteor.methods({
       throw new Meteor.Error(403, "Access Denied. You are not connected.");
     }
 
-    return Orders.update({cartId: cartId}, {
+    return Orders.update({ cartId: cartId }, {
       $set: {
         email: email
       }
@@ -699,10 +757,10 @@ Meteor.methods({
       Products.update({
         _id: item.variants._id
       }, {
-        $inc: {
-          inventoryQuantity: -item.quantity
-        }
-      }, { selector: { type: "variant" } });
+          $inc: {
+            inventoryQuantity: -item.quantity
+          }
+        }, { selector: { type: "variant" } });
     });
   },
 
@@ -746,15 +804,15 @@ Meteor.methods({
               "_id": orderId,
               "billing.paymentMethod.transactionId": transactionId
             }, {
-              $set: {
-                "billing.$.paymentMethod.mode": "capture",
-                "billing.$.paymentMethod.status": "completed",
-                "billing.$.paymentMethod.metadata": metadata
-              },
-              $push: {
-                "billing.$.paymentMethod.transactions": result
-              }
-            });
+                $set: {
+                  "billing.$.paymentMethod.mode": "capture",
+                  "billing.$.paymentMethod.status": "completed",
+                  "billing.$.paymentMethod.metadata": metadata
+                },
+                $push: {
+                  "billing.$.paymentMethod.transactions": result
+                }
+              });
           } else {
             if (result && result.error) {
               Logger.fatal("Failed to capture transaction.", order, paymentMethod.transactionId, result.error);
@@ -766,16 +824,16 @@ Meteor.methods({
               "_id": orderId,
               "billing.paymentMethod.transactionId": transactionId
             }, {
-              $set: {
-                "billing.$.paymentMethod.mode": "capture",
-                "billing.$.paymentMethod.status": "error"
-              },
-              $push: {
-                "billing.$.paymentMethod.transactions": result
-              }
-            });
+                $set: {
+                  "billing.$.paymentMethod.mode": "capture",
+                  "billing.$.paymentMethod.status": "error"
+                },
+                $push: {
+                  "billing.$.paymentMethod.transactions": result
+                }
+              });
 
-            return {error: "orders/capturePayments: Failed to capture transaction"};
+            return { error: "orders/capturePayments: Failed to capture transaction" };
           }
         });
       }
@@ -821,6 +879,34 @@ Meteor.methods({
     */
   "orders/cancelOrder"(order) {
     check(order, Object);
+    Logger.warn("Shopper canceled order", order)
+    const options = {
+      to: order.email,
+      from: "MATTERHORN-RC TEAM",
+      subject: "Canceled Order",
+      html: `<div>
+           <p>Hi ${order.shipping[0].address.fullName},</p>
+           <p>You canceled this order.</p>
+           <strong>
+            <p>Item: ${order.items[0].title}</p>
+            <p>Thanks for shopping with us!</p>
+            <b><p> MATTERHORN-RC </p></b>
+            </strong></div>`
+    };
+    Reaction.Email.send(options);
+    // SMS goes here
+    const shoppersPhone = `234${order.billing[0].address.phone.slice(1)}`;
+    const customerSmsContent = {
+      to: shoppersPhone,
+      message: "You canceled this order."
+    };
+    Meteor.call("send/smsAlert", customerSmsContent, (error) => {
+      if (error) {
+        Logger.warn("ERROR", error);
+      } else {
+        Logger.info("SMS SENT");
+      }
+    });
     return Orders.update(order._id, {
       $set: {
         "workflow.status": "canceled"
@@ -844,6 +930,34 @@ Meteor.methods({
     if (!Reaction.hasPermission("orders")) {
       throw new Meteor.Error(403, "Access Denied");
     }
+    const options = {
+      to: order.email,
+      from: "MATTERHORN-RC TEAM",
+      subject: "Canceled Order",
+      html: `<div>
+           <p>Hi ${order.shipping[0].address.fullName},</p>
+           <p>Your order has been canceled. Please find the details below</p>
+           <strong>
+            <p>Item: ${order.items[0].title}</p>
+          <p style="color:red">Reason: ${newComment.body}</p>
+            <p>Thanks for shopping with us!</p>
+            <b><p> MATTERHORN-RC </p></b>
+            </strong></div>`
+    };
+    Reaction.Email.send(options);
+    //SMS goes here
+    const shoppersPhone = `234${order.billing[0].address.phone.slice(1)}`;
+    const customerSmsContent = {
+      to: shoppersPhone,
+      message: "Your order has been canceled. Check your email for details."
+    };
+    Meteor.call("send/smsAlert", customerSmsContent, (error) => {
+      if (error) {
+        Logger.warn("ERROR", error);
+      } else {
+        Logger.info("SMS SENT");
+      }
+    });
       // TODO: Refund order
     return Orders.update(order._id, {
       $set: {
@@ -883,10 +997,10 @@ Meteor.methods({
       "_id": orderId,
       "billing.paymentMethod.transactionId": transactionId
     }, {
-      $push: {
-        "billing.$.paymentMethod.transactions": result
-      }
-    });
+        $push: {
+          "billing.$.paymentMethod.transactions": result
+        }
+      });
 
     if (result.saved === false) {
       Logger.fatal("Attempt for refund transaction failed", order._id, paymentMethod.transactionId, result.error);
