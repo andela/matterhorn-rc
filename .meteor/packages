@@ -100,5 +100,6 @@ simple:rest
 richsilv:pikaday
 mrt:moment
 chart:chart
+pauldowman:dotenv
 teamon:tinymce
 email

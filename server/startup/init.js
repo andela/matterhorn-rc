@@ -1,5 +1,7 @@
 import { Reaction, Logger } from "/server/api";
+import dotenv from "dotenv";
 
+dotenv.config();
 /*
  * Execute start up fixtures
  */
