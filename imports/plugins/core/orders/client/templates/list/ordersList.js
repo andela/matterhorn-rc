@@ -10,11 +10,6 @@ import { i18next } from "/client/api";
  *
  */
 Template.dashboardOrdersList.helpers({
-  orderStatus() {
-    if (this.workflow.status === "coreOrderCompleted") {
-      return true;
-    }
-  },
   getProductUrl() {
     const productId = this.items[0].productId;
     const getProductData = Meteor.subscribe("Product", productId);
