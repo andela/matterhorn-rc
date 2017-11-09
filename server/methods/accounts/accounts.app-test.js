@@ -502,7 +502,7 @@ describe("Account Meteor method ", function () {
     });
 
     it("should let a Owner invite a user to the shop", function (done) {
-      this.timeout(20000);
+      this.timeout(4000);
       this.retries(3);
       sandbox.stub(Reaction, "hasPermission", () => true);
       // TODO checking this is failing, even though we can see it happening in the log.
