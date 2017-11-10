@@ -127,7 +127,6 @@ Template.products.helpers({
   products() {
     return Template.instance().products.get();
   },
-
   loadMoreProducts() {
     return Template.instance().state.equals("canLoadMoreProducts", true);
   },
