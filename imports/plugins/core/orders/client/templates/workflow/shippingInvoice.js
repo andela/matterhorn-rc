@@ -6,7 +6,7 @@ import { Template } from "meteor/templating";
 import { ReactiveVar } from "meteor/reactive-var";
 import { i18next, Logger, formatNumber } from "/client/api";
 import { NumericInput } from "/imports/plugins/core/ui/client/components";
-import { Media, Orders, Shops } from "/lib/collections";
+import { Media, Orders, Shops, Wallets } from "/lib/collections";
 import _ from "lodash";
 
 //
@@ -35,7 +35,7 @@ Template.coreOrderShippingInvoice.onCreated(function () {
     // template.order = getOrder(currentData.orderId);
     if (order) {
       const paymentMethod = order.billing[0].paymentMethod;
-      Meteor.call("orders/refunds/list", paymentMethod, (error, result) => {
+      Meteor.call("orders/refunds/list", order, (error, result) => {
         if (!error) {
           this.refunds.set(result);
         }
@@ -118,29 +118,40 @@ Template.coreOrderShippingInvoice.events({
     const paymentMethod = order.billing[0].paymentMethod;
     const discounts = order.billing[0].invoice.discounts;
     const refund = state.get("field-refund") || 0;
-    const refunds = Template.instance().refunds.get();
     let refundTotal = 0;
-    _.each(refunds, function (item) {
-      refundTotal += parseFloat(item.amount);
-    });
     let adjustedTotal;
-
+    const shipmentAmount = order.shipping[0].shipmentMethod.rate;
+    const shipment = order.shipping[0];
+    const shipped = _.every(shipment.items, (shipmentItem) => {
+      for (const fullItem of order.items) {
+        if (fullItem._id === shipmentItem._id) {
+          if (fullItem.workflow) {
+            if (_.isArray(fullItem.workflow.workflow)) {
+              return _.includes(fullItem.workflow.workflow, "coreOrderItemWorkflow/completed");
+            }
+          }
+        }
+      }
+    });
+    if (shipped) {
+      refundTotal = orderTotal - shipmentAmount;
+    }
     // Stripe counts discounts as refunds, so we need to re-add the discount to not "double discount" in the adjustedTotal
     if (paymentMethod.processor === "Stripe") {
-      adjustedTotal = accounting.toFixed(orderTotal + discounts - refundTotal, 2);
+      adjustedTotal = accounting.toFixed(orderTotal + discounts - refundTotal);
     } else {
-      adjustedTotal = accounting.toFixed(orderTotal - refundTotal, 2);
+      adjustedTotal = accounting.toFixed(orderTotal - refundTotal);
     }
 
-    if (refund > adjustedTotal) {
-      Alerts.inline("Refund(s) total cannot be greater than adjusted total", "error", {
+    if (adjustedTotal > orderTotal) {
+      Alerts.inline("Adjusted total cannot be greater than order total", "error", {
         placement: "coreOrderRefund",
         i18nKey: "order.invalidRefund",
         autoHide: 10000
       });
     } else {
       Alerts.alert({
-        title: i18next.t("order.applyRefundToThisOrder", { refund: refund, currencySymbol: currencySymbol }),
+        title: i18next.t("order.applyRefundToThisOrder", { refund: accounting.toFixed(refund), currencySymbol: currencySymbol }),
         showCancelButton: true,
         confirmButtonText: i18next.t("order.applyRefund")
       }, (isConfirm) => {
@@ -150,6 +161,7 @@ Template.coreOrderShippingInvoice.events({
               Alerts.alert(error.reason);
             }
             state.set("field-refund", 0);
+            Alerts.alert("Refund Successful");
           });
         }
       });
@@ -210,25 +222,39 @@ Template.coreOrderShippingInvoice.helpers({
     const { state } = Template.instance();
     const order = state.get("order");
     const paymentMethod = order.billing[0].paymentMethod;
-    const refunds = Template.instance().refunds.get();
-
-    let refundTotal = 0;
-    _.each(refunds, function (item) {
-      refundTotal += parseFloat(item.amount);
+    const orderTotal = paymentMethod.amount;
+    const shipmentAmount = order.shipping[0].shipmentMethod.rate;
+    const shipment = order.shipping[0];
+    const shipped = _.every(shipment.items, (shipmentItem) => {
+      for (const fullItem of order.items) {
+        if (fullItem._id === shipmentItem._id) {
+          if (fullItem.workflow) {
+            if (_.isArray(fullItem.workflow.workflow)) {
+              return _.includes(fullItem.workflow.workflow, "coreOrderItemWorkflow/completed");
+            }
+          }
+        }
+      }
     });
-    const adjustedTotal = paymentMethod.amount - refundTotal;
+    let refundTotal = orderTotal;
+    if (shipped) {
+      refundTotal = orderTotal - shipmentAmount;
+    }
 
+    const adjustedTotal = refundTotal;
+    state.set("field-refund", refundTotal);
     return {
       component: NumericInput,
       numericType: "currency",
-      value: 0,
+      value: refundTotal,
       maxValue: adjustedTotal,
       format: state.get("currency"),
       classNames: {
         input: {amount: true}
       },
-      onChange(event, data) {
-        state.set("field-refund", data.numberValue);
+      onChange(event) {
+        event.preventDefault();
+        state.set("field-refund", refundTotal);
       }
     };
   },
@@ -245,6 +271,25 @@ Template.coreOrderShippingInvoice.helpers({
     const order = instance.state.get("order");
 
     return order.billing[0].invoice;
+  },
+
+  isCancelled() {
+    const instance = Template.instance();
+    const order = instance.state.get("order");
+    if (order.workflow.status === "canceled" ||
+      order.workflow.status === "coreOrderWorkflow/canceled") {
+      return true;
+    }
+    return false;
+  },
+
+  isRefunded() {
+    const instance = Template.instance();
+    const order = instance.state.get("order");
+    if (order.refunded === true) {
+      return true;
+    }
+    return false;
   },
 
   money(amount) {
@@ -300,7 +345,6 @@ Template.coreOrderShippingInvoice.helpers({
     const instance = Template.instance();
     const order = instance.state.get("order");
     const transactions = order.billing[0].paymentMethod.transactions;
-
     return _.filter(transactions, (transaction) => {
       return transaction.type === "refund";
     });
@@ -325,12 +369,23 @@ Template.coreOrderShippingInvoice.helpers({
     const order = instance.state.get("order");
     const paymentMethod = order.billing[0].paymentMethod;
     const discounts = order.billing[0].invoice.discounts;
-    const refunds = Template.instance().refunds.get();
     let refundTotal = 0;
-
-    _.each(refunds, function (item) {
-      refundTotal += parseFloat(item.amount);
+    const shipmentAmount = order.shipping[0].shipmentMethod.rate;
+    const shipment = order.shipping[0];
+    const shipped = _.every(shipment.items, (shipmentItem) => {
+      for (const fullItem of order.items) {
+        if (fullItem._id === shipmentItem._id) {
+          if (fullItem.workflow) {
+            if (_.isArray(fullItem.workflow.workflow)) {
+              return _.includes(fullItem.workflow.workflow, "coreOrderItemWorkflow/completed");
+            }
+          }
+        }
+      }
     });
+    if (shipped) {
+      refundTotal = paymentMethod.amount - shipmentAmount;
+    }
 
     if (paymentMethod.processor === "Stripe") {
       return Math.abs(paymentMethod.amount + discounts - refundTotal);
