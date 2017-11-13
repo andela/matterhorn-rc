@@ -1,6 +1,6 @@
 import moment from "moment";
 import { Template } from "meteor/templating";
-
+import { Orders, Shops, Products } from "/lib/collections";
 
 import { i18next } from "/client/api";
 
@@ -10,11 +10,6 @@ import { i18next } from "/client/api";
  *
  */
 Template.dashboardOrdersList.helpers({
-  orderStatus() {
-    if (this.workflow.status === "coreOrderCompleted") {
-      return true;
-    }
-  },
   getProductUrl() {
     const productId = this.items[0].productId;
     const getProductData = Meteor.subscribe("Product", productId);
@@ -33,6 +28,7 @@ Template.dashboardOrdersList.helpers({
     }
     return null;
   },
+
   orders(data) {
     if (data.hash.data) {
       return data.hash.data;

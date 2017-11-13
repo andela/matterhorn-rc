@@ -239,7 +239,7 @@ class ProductDetail extends Component {
                 name="productType"
                 onChange={this.handleChange}
               >
-                <option>Non Digital</option>
+                <option value="nonDigital">Non Digital</option>
                 <option>Digital</option>
               </select>
               </div>

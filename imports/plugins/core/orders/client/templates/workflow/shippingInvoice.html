@@ -55,13 +55,6 @@
       </div>
     </div>
 
-    <div class="form-group order-summary-form-group">
-      <label class="form-control-label reason" for="" data-i18n="cartSubTotals.discount">Discount</label>
-      <div class="amount">
-        {{> React (numericInputProps "discount" invoice.discounts)}}
-      </div>
-    </div>
-
     <div class="reason">
       {{> inlineAlerts placement="coreOrderShippingInvoice"}}
     </div>
@@ -115,9 +108,22 @@
     </div>
 
   </form>
+<div>
+  <a class="btn btn-link"
+  href="{{pathFor "dashboard/pdf/orders" id=orderId }}?shipment={{fulfillment._id}}"
+  target="_blank"
+  data-i18n="app.printInvoice">
+  Print Invoice
+  </a>
+</div>
 
+{{#if isCancelled}} 
 
-  {{#if paymentCaptured}}
+  {{#if isRefunded}}
+  <div class="order-summary-form-group">
+  <span class="reason" data-i18n="cartSubTotals.refundAmount">Refunded on: {{dateFormat refund.created format="MMM D, YYYY"}}</span>
+  </div>
+  {{else}}
     <form name="refund">
       <div class="form-group order-summary-form-group">
         <label class="form-control-label reason" for="" data-i18n="order.refundAmount">Refund Amount</label>
@@ -125,18 +131,6 @@
           {{> React refundInputProps}}
         </div>
       </div>
-
-      {{#each refund in refunds}}
-        <div class="order-summary-form-group">
-          <span class="reason" data-i18n="cartSubTotals.refundAmount">Refunded on: {{dateFormat refund.created format="MMM D, YYYY"}}</span>
-          <div class="amount">-{{formatPrice refund.amount}}</div>
-        </div>
-      {{/each}}
-
-      <div class="reason">
-        {{> inlineAlerts placement="coreOrderRefund"}}
-      </div>
-
       <hr>
 
       <div class="order-summary-form-group">
@@ -149,23 +143,16 @@
         </div>
       </div>
       <hr>
-      <div class="flex">
-        <a
-          class="btn btn-link"
-          href="{{pathFor "dashboard/pdf/orders" id=orderId }}?shipment={{fulfillment._id}}"
-          target="_blank"
-          data-i18n="app.printInvoice">
-          Print Invoice
-        </a>
+      <div class="flex"> 
         <button
           class="btn btn-success flex-item-fill"
           type="submit"
           data-event-action="applyRefund"
-          data-i18n="order.applyRefund" {{refundSubmitDisabled}}>Apply Refund</button>
+          data-i18n="order.applyRefund" {{refundSubmitDisabled}}>
+          Apply Refund</button>
       </div>
     </form>
-  {{else}}
-
   {{/if}}
+{{/if}}
 
 </template>

@@ -3,6 +3,11 @@ import * as Schemas from "/lib/collections/schemas/";
 import { check } from "meteor/check";
 
 Meteor.methods({
+  "wallet/refund/list": (order) => {
+    check(order, Object);
+    const orders = Wallets.find({ orderId: order._id});
+    return orders;
+  },
   "wallet/transaction": (userId, transactions) => {
     check(userId, String);
     check(transactions, Schemas.Transaction);
