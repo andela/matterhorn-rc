@@ -1,4 +1,4 @@
-import { Reaction } from "/client/api";
+import { Reaction, Router } from "/client/api";
 import { ReactionProduct } from "/lib/api";
 import { applyProductRevision } from "/lib/api/products";
 import { Products, Tags } from "/lib/collections";
@@ -7,12 +7,12 @@ import { Template } from "meteor/templating";
 import { ITEMS_INCREMENT } from "/client/config/defaults";
 
 /**
- * loadMoreProducts
- * @summary whenever #productScrollLimitLoader becomes visible, retrieve more results
- * this basically runs this:
- * Session.set('productScrollLimit', Session.get('productScrollLimit') + ITEMS_INCREMENT);
- * @return {undefined}
- */
+* loadMoreProducts
+* @summary whenever #productScrollLimitLoader becomes visible, retrieve more results
+* this basically runs this:
+* Session.set('productScrollLimit', Session.get('productScrollLimit') + ITEMS_INCREMENT);
+* @return {undefined}
+*/
 function loadMoreProducts() {
   let threshold;
   const target = $("#productScrollLimitLoader");
@@ -117,11 +117,16 @@ Template.products.helpers({
       tag: Tags.findOne({ slug: id }) || Tags.findOne(id)
     };
   },
-
+  currentRoute() {
+    const routeName = Router.getRouteName();
+    if (routeName === "index") {
+      return true;
+    }
+    return false;
+  },
   products() {
     return Template.instance().products.get();
   },
-
   loadMoreProducts() {
     return Template.instance().state.equals("canLoadMoreProducts", true);
   },
@@ -149,8 +154,8 @@ Template.products.helpers({
 });
 
 /**
- * products events
- */
+* products events
+*/
 
 Template.products.events({
   "click #productListView": function () {
