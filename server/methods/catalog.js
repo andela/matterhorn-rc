@@ -516,19 +516,31 @@ Meteor.methods({
     }
 
     const currentVariant = Products.findOne(variant._id);
-    const productId = currentVariant.ancestors[0];
-    const productToUpdate = Products.findOne(productId);
     // update variants
     if (typeof currentVariant === "object") {
       const newVariant = Object.assign({}, currentVariant, variant);
-      const newPrice = {
-        range: newVariant.price.toString(),
-        min: newVariant.price,
-        max: newVariant.price
-      };
-      productToUpdate.price = newPrice;
-      Products.update({ _id: variant._id }, { $set: newVariant });
-      Products.update({ _id: productId}, { $set: productToUpdate });
+
+      return Products.update({
+        _id: variant._id
+      }, {
+          $set: newVariant // newVariant already contain `type` property, so we
+          // do not need to pass it explicitly
+        }, {
+          validate: false
+        }, (error, result) => {
+          if (result) {
+            const productId = currentVariant.ancestors[0];
+            // we need manually check is these fields were updated?
+            // we can't stop after successful denormalization, because we have a
+            // case when several fields could be changed in top-level variant
+            // before form will be submitted.
+            toDenormalize.forEach(field => {
+              if (currentVariant[field] !== variant[field]) {
+                denormalize(productId, field);
+              }
+            });
+          }
+        });
     }
   },
 
