@@ -14,7 +14,7 @@ const unregisteredBuyerTour = [
     </div>`
   },
   {
-    element: ".product-grid-list",
+    element: "#products .container",
     intro: `<h2>Products</h2>
     <hr>
     <div>
