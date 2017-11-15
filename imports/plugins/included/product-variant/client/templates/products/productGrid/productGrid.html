@@ -1,17 +1,19 @@
 <template name="productGrid">
-  <section id="products">
-    <div class="container">
-      <div class="row">
+  <div class="container-main">
+    <div class="product-grid">
+      <ul class="product-grid-list list-unstyled" id="product-grid-list">
         {{#each products}}
-        {{> productGridItems}}
+          {{> productGridItems}}
         {{else}}
-        <div class="text-center">
-          <h3>
-            <span data-i18n="app.noProductsFound">No Products Found</span>
-          </h3>
-        </div>
+          <div class="row">
+            <div class="text-center">
+              <h3>
+                <span data-i18n="app.noProductsFound">No Products Found</span>
+              </h3>
+            </div>
+          </div>
         {{/each}}
-      </div>
+      </ul>
     </div>
-  </section>
+  </div>
 </template>

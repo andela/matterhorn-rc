@@ -17,23 +17,23 @@
   max-width: 50px;
   height: 50px;
   margin: 10px;
-  
+
   .main {
     .flex(1 1 auto);
     height: 100%;
     background-color: @black20;
     border: 1px solid @white;
   }
-  
+
   .side {
     .display(flex);
     .flex-direction(column);
     .flex(0 0 auto);
-    
+
     width: 33%;
     height: 100%;
   }
-  
+
   .side span {
     .flex(1 1 auto);
     display: block;
@@ -53,252 +53,4 @@
 
 .product-load-more {
   padding: 0 60px;  
-}
-
-.img-logo {
-  height: 50px;
-}
-
-.mt-0{
-  margin-top: 0;
-}
-
-@media(min-width: 768px){
-  .mt-sm-5{
-    margin-top: 5em;
-  }
-}
-
-@media(max-width:767px){
-  .mt-5{
-    margin-top: 5em;
-  }
-}
-
-#banner {
-  background-image: url("/resources/images/shopping_banner.jpg");
-  position: relative;
-  height: 480px;
-  width: 100%;
-  background-repeat: no-repeat;
-  background-size: cover;
-  padding: 0;
-}
-
-.banner-text {
-  position: absolute;
-  width: min-content;
-  right: 0;
-  text-align: center;
-  padding: 50px;
-  background-color: rgba(0,0,0,0.7);
-  height: -webkit-fill-available;
-  color: #ffffff;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-}
-
-.trending-product {
-  height: 250px;
-  width: 100%;
-  border: 3px solid #cccccc;
-}
-
-.trending-price {
-  position: absolute;
-  top: 100px;
-  padding: 3px;
-  width: fit-content;
-  background-color: rgba(0,0,0,0.8);
-  color: #ffffff;
-}
-
-section {
-  padding-top: 60px;
-  padding-bottom: 60px; 
-}
-section h3 {
-  color: #6A1A1A;
-  text-transform: uppercase;
-  padding-bottom: 20px;
-}
-.img-trending {
-  height: 250px;
-  width: 100%;
-}
-#advert {
-  background-image: linear-gradient(-180deg, #6299AF 0%, #336077 100%);
-  min-height: 200px;
-  color: #ffffff;
-  text-align: center;
-}
-#advert h3 {
-  color: #ffffff;
-}
-.img-advert {
-  height: 100px;
-}
-.advert-image {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-}
-.product-box {
-  height: 300px;
-  border: 1px solid #cccccc;
-  width: 100%;
-  margin-bottom: 20px;
-}
-
-.img-product {
-  height: 200px;
-  width: 100%;
-}
-
-.product-description {
-  padding: 10px;
-  font-weight: bold;
-}
-.product-name {
-  font-size: larger;
-}
-.product-stock {
-  text-align: right;
-  background-color: #6A1A1A;
-  width: fit-content;
-  padding: 1px 5px 2px 5px;
-  color: #ffffff;
-}
-#subscribe {
-  background-color: #6A1A1A;
-  color: #ffffff;
-  padding-bottom: 40px;
-  padding-top: 40px;
-  
-}
-
-.form-inline .form-control {
-  width: -webkit-fill-available !important;
-}
-
-#footer {
-  padding-bottom: 20px;
-  padding-top: 0px;
-}
-.satisfaction {
-  text-align: center;
-}
-
-.img-satisfaction {
-  height: 100px;
-  margin: auto;
-}
-
-li .nav-item {
-  padding-left: 20px;
-}
-
-.fa {
-  color: rgba(0,0,0,0.7);
-}
-
-.badge {
-  background-color: #E86732;
-}
-
-@media (max-width: 1024px) {
-  .banner-text {
-    position: absolute;
-    width: 100%;
-    right: 0;
-    text-align: center;
-    padding: 50px;
-    background-color: rgba(0,0,0,0.7);
-    color: #ffffff;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-  }
-  
-  #banner {
-    background-image: url("/resources/images/shopping_banner.jpg");
-    position: relative;
-    height: 150px;
-    width: 100%;
-    background-repeat: no-repeat;
-    background-size: contain;
-    padding: 0;
-  }
-  .btn-rc {
-    background-color: #E86731 !important;
-    color: #ffffff;
-  }
-}
-/* For Mobile phones */
-@media only screen and (max-width: 480px) {
-  .container {
-    width: 100%;
-  }
-}
-
-/* For tablet phones */ 
-@media only screen and (min-width: 480px) and (max-width:768px) {
-  .container {
-    width: 100%;
-  }
-}
-
-.product-grid-item-images {
-  box-shadow: none;
-}
-
-.social img{
-  width: 80px;
-}
-
-.img-payment{
-  width: 180px;
-}
-
-@media(min-width: 769px){
-  #subscribe .container > .row{
-    display: flex;
-    align-items: center;
-  }
-  #footer .container > .row{
-    display: flex;
-    align-items: center;
-  } 
-}
-
-@media(min-width: 768px){
-  #advert .container > .row{
-    display: flex;
-    align-items: center;
-  }
-}
-
-.rui.navbar{
-  background-color: #fff;
-  color: #000 !important;
-}
-
-.rui.navbar a, .rui.navbar span{
-  color: #000;
-}
-
-.badge {
-  background-color: #E86732 !important;
-}
-
-.cart-icon{
-  background-color: transparent;
-}
-
-.cart-icon:hover{
-  background-color: rgba(0,0,0,0.3);
 }

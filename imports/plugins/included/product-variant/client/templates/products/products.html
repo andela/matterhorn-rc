@@ -1,91 +1,36 @@
 <template name="products">
-  
+
   {{#if ready}}
-  
-  {{#if currentRoute }}  
-  {{>indexPage products=products}}
+    {{>productGrid products=products}}
+
+    {{#if loadMoreProducts}}
+      <div class="product-load-more" id="productScrollLimitLoader">
+          <button
+            class="btn btn-inverse btn-block btn-lg"
+            data-i18n="app.loadMoreProducts"
+            data-event-action="loadMoreProducts">Load more products</button>
+      </div>
+    {{/if}}
+
+    {{#unless Template.subscriptionsReady}}
+      <div class="spinner-container">
+        <div class="spinner"></div>
+      </div>
+    {{/unless}}
   {{else}}
-  {{>productGrid products=products}}  
+    <div class="spinner-container spinner-container-lg">
+      <div class="spinner"></div>
+    </div>
   {{/if}}
-  
-  {{#if loadMoreProducts}}
-  <div class="product-load-more" id="productScrollLimitLoader">
-    <button
-    class="btn btn-inverse btn-block btn-lg"
-    data-i18n="app.loadMoreProducts"
-    data-event-action="loadMoreProducts">Load more products</button>
-  </div>
-  {{/if}}
-  
-  {{#unless Template.subscriptionsReady}}
-  <div class="spinner-container">
-    <div class="spinner"></div>
-  </div>
-  {{/unless}}
-  {{else}}
-  <div class="spinner-container spinner-container-lg">
-    <div class="spinner"></div>
-  </div>
-  {{/if}}
-  
-  
+
+
 </template>
 
 <template name="productListGrid">
   <div class="row">
     {{>productGrid products=products}}
     {{#if hasPermission "createProduct"}}
-    {{>productList}}
+      {{>productList}}
     {{/if}}
   </div>
-</template>
-
-<template name="indexPage">
-  
-  <section id="banner">
-    <div class="banner-text">
-      <h1 class="mt-0"> Your one stop shop for anything </h1>
-      <a href="/reaction/tag/shop" class="btn btn-danger mt-sm-5">START SHOPPING</a>
-    </div>
-  </section>
-    
-  <section id="advert">
-    <div class="container">
-      <div class="row">
-        <div class="col-md-4 col-lg-4">
-          <div class="advert-image">
-            <img src="/resources/images/shoes.jpg" class="img img-responsive img-advert" />
-          </div>
-        </div>
-        <div class="col-md-4 col-lg-4">
-          <h3> A GREAT PLACE TO PUT YOUR PRODUCTS FOR OTHERS TO SEE </h3>
-        </div>
-        <div class="col-md-4 col-lg-4">
-          <a href="/pages/ads" class="btn btn-danger">LEARN MORE</a>
-        </div>
-      </div>
-    </div>
-  </section>
-  
-  {{>productGrid products=products}}
-
-  <section id="footer" class="mt-sm-5">
-    <div class="container">
-      <div class="row">
-        <div class="col-md-4 col-sm-4 col-xs-12 mt-5 text-center">
-          <div class="satisfaction">
-            <img src="/resources/images/satisfaction.png"  class="img img-responsive img-satisfaction"/>
-          </div>
-        </div>
-        <div class="col-md-4 col-sm-4 col-xs-12 mt-5 text-center">
-          <img src="/resources/images/payments.png" class="img img-payment"/>
-        </div>
-        <div class="col-md-4 col-sm-4 col-xs-12 text-center social">
-          <a href="http://fb.com/reactioncommerce"><img src="/resources/images/facebook.png" /></a>
-          <a href="http://twiiter.com/matterhorn_rc"><img src="/resources/images/twitter.png"/></a>
-        </div>
-      </div>
-    </div>
-  </section>
-  
 </template>
